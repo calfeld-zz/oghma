@@ -68,7 +68,7 @@ class OghmaServer < Sinatra::Base
   comet.on_disconnect = -> client_id { puts "COMET DISCONNECT #{client_id}" }
 
   get '/' do
-    redirect '/index.html'
+    erb :index
   end
 
   at_exit { dictionary.shutdown }

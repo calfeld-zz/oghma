@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>Oghma</title>
+  <script type='application/javascript' src='/external/jquery.js'></script>
+  <script type='application/javascript' src='/external/kinetic.js'></script>
+<% Dir.glob("#{HOME}/public/heron/**/*.js").each do |js| %>
+  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
+<% end %>
+<% Dir.glob("#{HOME}/public/oghma/**/*.js").each do |js| %>
+  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
+<% end %>
+</head>
+
+<body>
+  <p>Placeholder</p>
+</body>
+</html>
