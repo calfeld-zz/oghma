@@ -7,6 +7,7 @@ end
 require 'rubygems'
 require 'open3'
 require 'fileutils'
+require 'net/http'
 
 # Configuration
 OGHMA_TOP = File.dirname(File.expand_path(__FILE__))
@@ -24,6 +25,12 @@ OGHMA_CLIENT_FILES =
   Rake::FileList.new("#{OGHMA_TOP}/oghma/**/*.coffee").exclude(%r{/test/})
 
 COFFEE = 'coffee'
+
+EXTERNALS = [
+  [ "http://coffeescript.org/extras/coffee-script.js", "coffee-script.js" ],
+  [ "http://kineticjs.com/download/v4.1.2/kinetic-v4.1.2.js", "kinetic.js" ],
+  [ "http://code.jquery.com/jquery-1.8.3.js", "jquery.js" ]
+]
 
 # Helpers
 def coffee(dst, src)
@@ -77,10 +84,30 @@ build_coffee_tasks( HERON_CLIENT_FILES, 'public/heron', :heron_client )
 build_coffee_tasks( OGHMA_CLIENT_FILES, 'public/oghma', :oghma_client )
 build_copy_tasks(   HERON_SERVER_FILES, 'server/heron', :heron_server )
 
+EXTERNALS.each do |src, dst|
+  dir        = "public/external"
+  uri        = URI(src)
+  long       = File.basename(uri.path)
+  long_path  = "#{dir}/#{long}"
+  short_path = "#{dir}/#{dst}"
+  directoryp(dir)
+  file(long_path => [dir]) do
+    File.open(long_path, "w") do |out|
+      out.print Net::HTTP.get( uri )
+    end
+  end
+  if short_path != long_path
+    file(short_path => [long_path]) do
+      link(long_path, short_path)
+    end
+  end
+  task :externals => [short_path]
+end
+
 task :heron   => [ :heron_client, :heron_server ]
 task :oghma   => [ :oghma_client                ]
 task :build   => [ :heron, :oghma               ]
-task :default => [ :build                       ]
+task :default => [ :build, :externals           ]
 
 task :watch do
   while true do
