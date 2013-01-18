@@ -84,12 +84,15 @@ build_coffee_tasks( HERON_CLIENT_FILES, 'public/heron', :heron_client )
 build_coffee_tasks( OGHMA_CLIENT_FILES, 'public/oghma', :oghma_client )
 build_copy_tasks(   HERON_SERVER_FILES, 'server/heron', :heron_server )
 
+task :externals
 EXTERNALS.each do |src, dst|
   dir        = "public/external"
   uri        = URI(src)
   long       = File.basename(uri.path)
   long_path  = "#{dir}/#{long}"
   short_path = "#{dir}/#{dst}"
+  
+  next if File.exists?(long_path)
   directoryp(dir)
   file(long_path => [dir]) do
     File.open(long_path, "w") do |out|
