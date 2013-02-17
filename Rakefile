@@ -124,7 +124,7 @@ task :default => [ :build, :externals, :doc     ]
 task :watch do
   while true do
     pid = fork do
-      exec([$0, 'build'])
+      exec($0, 'build')
     end
     Process.wait(pid)
     sleep 5
