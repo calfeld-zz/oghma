@@ -91,7 +91,7 @@ EXTERNALS.each do |src, dst|
   long       = File.basename(uri.path)
   long_path  = "#{dir}/#{long}"
   short_path = "#{dir}/#{dst}"
-  
+
   next if File.exists?(long_path)
   directoryp(dir)
   file(long_path => [dir]) do
@@ -107,10 +107,19 @@ EXTERNALS.each do |src, dst|
   task :externals => [short_path]
 end
 
+task :doc do
+  require 'fileutils'
+
+  codo_dir = 'doc/codo'
+  yard_dir = 'doc/yard'
+  FileUtils.mkdir_p('doc')
+  sh "codo -v -o #{codo_dir} --title Oghma"
+end
+
 task :heron   => [ :heron_client, :heron_server ]
 task :oghma   => [ :oghma_client                ]
 task :build   => [ :heron, :oghma               ]
-task :default => [ :build, :externals           ]
+task :default => [ :build, :externals, :doc     ]
 
 task :watch do
   while true do
