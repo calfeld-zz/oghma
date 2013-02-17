@@ -113,7 +113,8 @@ task :doc do
   codo_dir = 'doc/codo'
   yard_dir = 'doc/yard'
   FileUtils.mkdir_p('doc')
-  sh "codo -v -o #{codo_dir} --title Oghma"
+  oghma_files =   Rake::FileList.new("oghma/**/*.coffee")
+  sh "codo -v -o #{codo_dir} --title Oghma #{oghma_files} #{HERON_CLIENT_FILES}"
 end
 
 task :heron   => [ :heron_client, :heron_server ]
