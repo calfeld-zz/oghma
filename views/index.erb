@@ -3,12 +3,21 @@
   <title>Oghma</title>
   <script type='application/javascript' src='/external/jquery.js'></script>
   <script type='application/javascript' src='/external/kinetic.js'></script>
+  <script type='application/javascript' src='/external/coffee-script.js'></script>
+  <script type='application/javascript' src='/external/bootstrap.js'></script>
+  <script type='application/javascript' src='/heron/util.js'></script>
 <% Dir.glob("#{HOME}/public/heron/**/*.js").each do |js| %>
   <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
 <% end %>
 <% Dir.glob("#{HOME}/public/oghma/**/*.js").each do |js| %>
   <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
 <% end %>
+
+  <script type='text/coffeescript'>
+    Ext.onReady( ->
+      @O = new Oghma.App(debug: true)
+    )
+  </script>
 </head>
 
 <body>
