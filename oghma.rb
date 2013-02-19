@@ -26,8 +26,8 @@ require 'sinatra'
 HOME = File.dirname(__FILE__)
 $:.unshift(File.join(HOME, 'server/heron'))
 
-require 'sinatra_comet'
-require 'sinatra_dictionary'
+require 'server/sinatra_comet'
+require 'server/sinatra_dictionary'
 
 # Initialize Dictionary Database
 DICTIONARY_DB = File.join(HOME, 'oghma.db')

@@ -33,6 +33,18 @@ EXTERNALS = [
 ]
 
 # Helpers
+def common_parent(a, b)
+  as = File.expand_path(a).split('/')
+  bs = File.expand_path(b).split('/')
+
+  i = 0
+  while as[i] == bs[i]
+    i += 1
+  end
+
+  as[0..i].join('/')
+end
+
 def coffee(dst, src)
   puts "coffee #{src} -> #{dst}"
   Open3.popen3(COFFEE, '-c', '-p', src) do |cin, cout, cerr, wt|
@@ -55,8 +67,9 @@ end
 
 def build_coffee_tasks(filelist, dstdir, parenttask)
   filelist.each do |src|
-    base = File.basename(src, '.coffee')
-    dst  = "#{dstdir}/#{base}.js"
+    src = File.expand_path(src)
+    common = common_parent(src, dstdir)
+    dst = src.sub(common, dstdir).gsub(/.coffee$/, '.js')
     dir  = File.dirname(dst)
 
     # Create actual tasks
@@ -68,8 +81,9 @@ end
 
 def build_copy_tasks(filelist, dstdir, parenttask)
   filelist.each do |src|
-    base = File.basename(src)
-    dst  = "#{dstdir}/#{base}"
+    src = File.expand_path(src)
+    common = common_parent(src, dstdir)
+    dst = src.sub(common, dstdir)
     dir  = File.dirname(dst)
 
     # Create actual tasks
