@@ -4,7 +4,8 @@
   <script type='application/javascript' src='/external/jquery.js'></script>
   <script type='application/javascript' src='/external/kinetic.js'></script>
   <script type='application/javascript' src='/external/coffee-script.js'></script>
-  <script type='application/javascript' src='/external/bootstrap.js'></script>
+  <link rel="stylesheet" type="text/css" href='/external/extjs/resources/css/ext-all.css'>
+  <script type='application/javascript' src='/external/extjs/bootstrap.js'></script>
   <script type='application/javascript' src='/heron/util.js'></script>
 <% Dir.glob("#{HOME}/public/heron/**/*.js").each do |js| %>
   <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
