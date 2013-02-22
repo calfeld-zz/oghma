@@ -56,7 +56,7 @@ Ext.define( 'Oghma.Ext.Login',
           formBind: true
           text: 'Login'
           handler: =>
-            user = @child( 'combo' ).getValue()
+            user = form.child( 'combo' ).getValue()
             if user?
               @onLogin( user )
         },
