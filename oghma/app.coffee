@@ -76,24 +76,24 @@ class Oghma.App
   # Login Phase.
   #
   # Display Login window.  Also handles user creation logic.
+  #
+  # @return [null] null
   login_phase: ->
     @userverse.connect( @dictionary, 'oghma.thingy.user', =>
       create = Ext.create( 'Oghma.Ext.EditObject',
         object:
-          Name:      ''
-          Primary:   'FF0000'
-          Secondary: '00FF00'
+          name:      ''
+          primary:   'FF0000'
+          secondary: '00FF00'
         types:
-          Primary:   'color'
-          Secondary: 'color'
+          primary:   'color'
+          secondary: 'color'
         title: 'Create User'
-        onSave: (userinfo) ->
-          if userinfo.Name == ''
-            alert( 'Name cannot be blank.' )
-          else
-            create.close()
+        onSave: ( userinfo ) =>
+          if @create_user( userinfo )
             login.close()
-            alert( "Creating user: #{userinfo.Name}" )
+            create.close()
+            @login_user( userinfo.Name )
         onCancel: ->
           create.hide()
           login.show()
@@ -103,7 +103,7 @@ class Oghma.App
         onLogin: ( user ) ->
           login.close()
           create.close()
-          alert( "Login #{user}" )
+          @login_user( user )
         onCreate: ->
           login.hide()
           create.show()
@@ -113,6 +113,24 @@ class Oghma.App
     )
     @tableverse.connect( @dictionary, 'oghma.thingy.table' )
     null
+
+  # Create a new user.
+  #
+  # See {#login_phase()}.
+  #
+  # @param [object] userinfo User info.
+  # @option userinfo [string] username User name.
+  # @option userinfo [string] primary Primary color.
+  # @option userinfo [string] secondary Seconary color.
+  # @return [null] null
+  create_user: ( userinfo ) ->
+    if @userverse.user.with_name( userinfo.name ).length > 0
+      # TODO: Do something better with errors.
+      alert( "User #{userinfo.name} already exists." )
+      false
+    else
+      @userverse.create( 'user', userinfo )
+      true
 
   # Send verbose message to the console.
   #
