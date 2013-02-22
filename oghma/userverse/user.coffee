@@ -36,25 +36,27 @@ Oghma.Thingy.Userverse.register( ( thingyverse ) ->
     [ 'name' ],
     colors: [ 'primary', 'secondary' ]
     ( attrs ) ->
-      @_ =
+      @__ =
         name:      attrs.name      ? 'Guest'
         primary:   attrs.primary   ? 'orange'
         secondary: attrs.secondary ? 'blue'
 
-      thingyverser.user.add( this )
+      @after_construction( ->
+        thingyverse.user.add( this )
+      )
 
       set: (thingy, attrs) ->
         for k, v of attrs
           if k == 'name'
             thingyverse.user.remove( thingy )
-            @_[k] = v
+            thingy.__[k] = v
             thingyverse.user.add( thingy )
           else
-            @_[k] = v
+            thingy.__[k] = v
         null
 
       get: ( thingy, keys... ) ->
-        @_
+        thingy.__
 
       remove: ( thingy ) ->
         thingyverse.user.remove( thingy )
