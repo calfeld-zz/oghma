@@ -55,16 +55,50 @@ class Oghma.App
       client_id: @client_id
       debug:     @_.debug
     )
+
+    handle_login = =>
+      @userverse.connect(@dictionary, 'oghma.thingy.user', =>
+        create = Ext.create( 'Oghma.Ext.EditObject',
+          object:
+            Name:      ''
+            Primary:   'FF0000'
+            Secondary: '00FF00'
+          types:
+            Primary:   'color'
+            Secondary: 'color'
+          title: 'Create User'
+          onSave: (userinfo) ->
+            if userinfo.Name == ''
+              alert('Name cannot be blank.')
+            else
+              create.close()
+              login.close()
+              alert("Creating user: #{userinfo.Name}")
+          onCancel: ->
+            create.hide()
+            login.show()
+        )
+        login = Ext.create( 'Oghma.Ext.Login',
+          O: this
+          onLogin: ( user ) ->
+            login.close()
+            create.close()
+            alert("Login #{user}")
+          onCreate: ->
+            login.hide()
+            create.show()
+        )
+        login.show()
+        Ext.getBody().unmask()
+      )
+      @tableverse.connect(@dictionary, 'oghma.thingy.table')
+      null
+
     @comet = new Heron.Comet(
       client_id:  @client_id
       on_message: (msg)  => @dictionary.receive(msg)
       on_verbose: (text) => @verbose(text)
-      on_connect: =>
-        @userverse.connect(@dictionary, 'oghma.thingy.user', =>
-          alert("show_login")
-          Ext.getBody().unmask()
-        )
-        @tableverse.connect(@dictionary, 'oghma.thingy.table')
+      on_connect: handle_login
     )
 
     # Thingyverses
