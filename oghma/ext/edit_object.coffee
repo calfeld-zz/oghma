@@ -95,6 +95,7 @@ Ext.define( 'Oghma.Ext.EditObject',
 
       Ext.apply( field,
         fieldLabel: k
+        labelStyle: 'text-transform: capitalize'
         name:       k
         allowBlank: false
       )
