@@ -103,10 +103,10 @@ class Oghma.App
 
     # Thingyverses
     @userverse = new Heron.Thingyverse()
-    Oghma.Thingy.Userverse.generate(@userverse)
+    Oghma.Thingy.Userverse.generate(@userverse, this)
 
     @tableverse = new Heron.Thingyverse(ready: false)
-    Oghma.Thingy.Tableverse.generate(@tableverse)
+    Oghma.Thingy.Tableverse.generate(@tableverse, this)
 
     # Connect
     @comet.connect()

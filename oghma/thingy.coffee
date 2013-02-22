@@ -45,19 +45,19 @@ class Oghma.PrimordialThingyverse
 
   # Register a generator function to be called at thingyverse creation.
   #
-  # @param [function(thingyverse)] Function to be called with thingyverse at
-  #   thingyverse creation.
+  # @param [function({Heron.Thingyverse}, {Oghma.App})] Function to be called
+  #   with thingyverse and application at thingyverse creation.
   # @return [Oghma.PrimordialThingyverse] this
-  register: (generator) ->
-    @_.generators.push(generator)
+  register: ( generator ) ->
+    @_.generators.push( generator )
     this
 
   # Call all generators with `thingyverse`.
   #
   # @param [Heron.Thingyverse] thingyverse Thingyverse to pass to generators.
   # @return [Oghma.PrimordialThingyverse] this
-  generate: (thingyverse) ->
-    g(thingyverse) for g in @_.generators
+  generate: ( thingyverse, O ) ->
+    g( thingyverse, O ) for g in @_.generators
     this
 
 # See {Oghma.PrimordialThingyverse}
