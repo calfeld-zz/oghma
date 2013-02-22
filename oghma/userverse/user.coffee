@@ -28,8 +28,8 @@ Oghma.Thingy ?= {}
 # Indices:
 # - name
 #
-Oghma.Thingy.Userverse.register( (thingyverse) ->
-  thingyverse.user = new Heron.Index.MapIndex('name')
+Oghma.Thingy.Userverse.register( ( thingyverse ) ->
+  thingyverse.user = new Heron.Index.MapIndex( 'name' )
 
   thingyverse.define(
     'user',
@@ -41,14 +41,14 @@ Oghma.Thingy.Userverse.register( (thingyverse) ->
         primary:   attrs.primary   ? 'orange'
         secondary: attrs.secondary ? 'blue'
 
-      thingyverser.user.add(this)
+      thingyverser.user.add( this )
 
       set: (thingy, attrs) ->
         for k, v of attrs
           if k == 'name'
-            thingyverse.user.remove(thingy)
+            thingyverse.user.remove( thingy )
             @_[k] = v
-            thingyverse.user.add(thingy)
+            thingyverse.user.add( thingy )
           else
             @_[k] = v
         null
@@ -57,7 +57,7 @@ Oghma.Thingy.Userverse.register( (thingyverse) ->
         @_
 
       remove: ( thingy ) ->
-        thingyverse.user.remove(thingy)
+        thingyverse.user.remove( thingy )
         null
   )
 )

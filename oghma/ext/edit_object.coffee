@@ -42,7 +42,7 @@ Ext.define( 'Oghma.Ext.EditObject',
 
   # See ExtJS.
   initComponent: ->
-    Ext.apply(this,
+    Ext.apply( this,
       width:    400
       layout:   'fit' # XXX?
       listeners: [

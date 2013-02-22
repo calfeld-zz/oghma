@@ -46,7 +46,7 @@ class Oghma.App
     @_ = {}
     @_.debug = config.debug ? false
 
-    Ext.getBody().mask('Initialising...')
+    Ext.getBody().mask( 'Initialising...' )
 
     # Communication
     @client_id = Heron.Util.generate_id()
@@ -57,7 +57,7 @@ class Oghma.App
     )
 
     handle_login = =>
-      @userverse.connect(@dictionary, 'oghma.thingy.user', =>
+      @userverse.connect( @dictionary, 'oghma.thingy.user', =>
         create = Ext.create( 'Oghma.Ext.EditObject',
           object:
             Name:      ''
@@ -69,11 +69,11 @@ class Oghma.App
           title: 'Create User'
           onSave: (userinfo) ->
             if userinfo.Name == ''
-              alert('Name cannot be blank.')
+              alert( 'Name cannot be blank.' )
             else
               create.close()
               login.close()
-              alert("Creating user: #{userinfo.Name}")
+              alert( "Creating user: #{userinfo.Name}" )
           onCancel: ->
             create.hide()
             login.show()
@@ -83,7 +83,7 @@ class Oghma.App
           onLogin: ( user ) ->
             login.close()
             create.close()
-            alert("Login #{user}")
+            alert( "Login #{user}" )
           onCreate: ->
             login.hide()
             create.show()
@@ -91,22 +91,22 @@ class Oghma.App
         login.show()
         Ext.getBody().unmask()
       )
-      @tableverse.connect(@dictionary, 'oghma.thingy.table')
+      @tableverse.connect( @dictionary, 'oghma.thingy.table' )
       null
 
     @comet = new Heron.Comet(
       client_id:  @client_id
-      on_message: (msg)  => @dictionary.receive(msg)
-      on_verbose: (text) => @verbose(text)
+      on_message: ( msg )  => @dictionary.receive( msg )
+      on_verbose: ( text ) => @verbose( text )
       on_connect: handle_login
     )
 
     # Thingyverses
     @userverse = new Heron.Thingyverse()
-    Oghma.Thingy.Userverse.generate(@userverse, this)
+    Oghma.Thingy.Userverse.generate( @userverse, this )
 
-    @tableverse = new Heron.Thingyverse(ready: false)
-    Oghma.Thingy.Tableverse.generate(@tableverse, this)
+    @tableverse = new Heron.Thingyverse( ready: false )
+    Oghma.Thingy.Tableverse.generate( @tableverse, this )
 
     # Connect
     @comet.connect()
@@ -115,22 +115,22 @@ class Oghma.App
   #
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
-  verbose: (msg) ->
-    console.info(msg)
+  verbose: ( msg ) ->
+    console.info( msg )
     this
 
   # Send error message to the console.
   #
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
-  error: (msg) ->
-    console.error(msg)
+  error: ( msg ) ->
+    console.error( msg )
     this
 
   # Send a debug message to the console.
   #
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
-  debug: (msg) ->
-    console.debug(msg)
+  debug: ( msg ) ->
+    console.debug( msg )
     this

@@ -68,7 +68,7 @@ Ext.define( 'Oghma.Ext.Login',
       ]
     )
 
-    Ext.apply(this,
+    Ext.apply( this,
       title:    'Oghma Login'
       width:    400
       closable: false
