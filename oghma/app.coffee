@@ -15,6 +15,8 @@
 Oghma = @Oghma ?= {}
 Oghma.Thingy ?= {}
 
+root = this
+
 # Main application class.
 #
 # A single instance of this class is instantiated as the O global variable
@@ -43,6 +45,9 @@ class Oghma.App
   # - tableverse [{Heron.Thingyverse}]
   #
   constructor: (config = {}) ->
+    # Store in global for easy introspection from console.
+    root.O = this
+
     @_ = {}
     @_.debug = config.debug ? false
 
