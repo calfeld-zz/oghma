@@ -63,9 +63,14 @@ class OghmaServer < Sinatra::Base
   dictionary.on_collision = -> s     { puts "DICT COLLISION #{s}"         }
 
   comet.enable_debug
+  comet.client_timeout  = 20
+  comet.receive_timeout = 10
 
   comet.on_connect    = -> client_id { puts "COMET CONNECT #{client_id}"    }
-  comet.on_disconnect = -> client_id { puts "COMET DISCONNECT #{client_id}" }
+  comet.on_disconnect = -> client_id do
+     puts "COMET DISCONNECT #{client_id}"
+     dictionary.disconnected( client_id )
+   end
 
   get '/' do
     erb :index
