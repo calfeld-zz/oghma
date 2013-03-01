@@ -84,40 +84,67 @@ class Oghma.App
   #
   # @return [null] null
   login_phase: ->
+    # Create login Manager
+    @login = new Oghma.Login( this )
+
     @userverse.connect( @dictionary, 'oghma.thingy.user', =>
-      create = Ext.create( 'Oghma.Ext.EditObject',
-        object:
-          name:      ''
-          primary:   'FF0000'
-          secondary: '00FF00'
-        types:
-          primary:   'color'
-          secondary: 'color'
-        title: 'Create User'
-        onSave: ( userinfo ) =>
-          if @create_user( userinfo )
+      # Check for ?user parameter.
+      result = /^\?user=([^?]+)/.exec( window.location.search )
+      if result?
+        user = decodeURI( result[1] )
+        @verbose( "Auto logging in #{user}" )
+        @login_user( user )
+      else
+        create = Ext.create( 'Oghma.Ext.EditObject',
+          object:
+            name:      ''
+            primary:   'FF0000'
+            secondary: '00FF00'
+          types:
+            primary:   'color'
+            secondary: 'color'
+          title: 'Create User'
+          onSave: ( userinfo ) =>
+            if @create_user( userinfo )
+              login.close()
+              create.close()
+              @login_user( userinfo.name )
+
+          onCancel: ->
+            create.hide()
+            login.show()
+        )
+        login = Ext.create( 'Oghma.Ext.Login',
+          O: this
+          onLogin: ( user ) =>
             login.close()
             create.close()
-            @login_user( userinfo.Name )
-        onCancel: ->
-          create.hide()
-          login.show()
-      )
-      login = Ext.create( 'Oghma.Ext.Login',
-        O: this
-        onLogin: ( user ) ->
-          login.close()
-          create.close()
-          @login_user( user )
-        onCreate: ->
-          login.hide()
-          create.show()
-      )
-      login.show()
+            @login_user( user, @client_id )
+          onCreate: ->
+            login.hide()
+            create.show()
+        )
+        login.show()
       Ext.getBody().unmask()
     )
     @tableverse.connect( @dictionary, 'oghma.thingy.table' )
     null
+
+  # Login as user.
+  #
+  # @param [string] username User to login as.
+  # @return [Oghma.App] this
+  login_user: ( username ) ->
+    @userverse.create( 'login',
+      name:      username
+      client_id: @client_id
+    )
+    window.history?.replaceState?(
+      null,
+      document.title,
+      encodeURI( "?user=#{username}" )
+    )
+    this
 
   # Create a new user.
   #
