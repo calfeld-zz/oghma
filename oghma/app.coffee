@@ -145,6 +145,14 @@ class Oghma.App
     console.info( msg )
     this
 
+  # Send warn message to the console.
+  #
+  # @param [string] msg Message to send.
+  # @return [Oghma.App] this
+  warn: ( msg ) ->
+    console.warn( msg )
+    this
+
   # Send error message to the console.
   #
   # @param [string] msg Message to send.
