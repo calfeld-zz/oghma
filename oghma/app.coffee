@@ -64,8 +64,10 @@ class Oghma.App
     @comet = new Heron.Comet(
       client_id:  @client_id
       on_message: ( msg )  => @dictionary.receive( msg )
-      on_verbose: ( text ) => @verbose( text )
-      on_connect: => @login_phase()
+      on_verbose: ( text ) => console.info( text )
+      on_connect: =>
+        @verbose( 'Connected to server.' )
+        @login_phase()
     )
 
     # Thingyverses
@@ -74,6 +76,14 @@ class Oghma.App
 
     @tableverse = new Heron.Thingyverse( ready: false )
     Oghma.Thingy.Tableverse.generate( @tableverse, this )
+
+    # Show console
+    @console = Ext.create( 'Oghma.Ext.Console',
+      x: 50
+      y: 50
+    )
+    @console.show()
+    @verbose( 'Oghma is connecting...' )
 
     # Connect
     @comet.connect()
@@ -86,13 +96,15 @@ class Oghma.App
   login_phase: ->
     # Create login Manager
     @login = new Oghma.Login( this )
+    @login.on( 'login', ( username ) => @message( username, 'Logged In' ) )
+    @login.on( 'logout', ( username ) => @message( username, 'Logged Out' ) )
 
     @userverse.connect( @dictionary, 'oghma.thingy.user', =>
       # Check for ?user parameter.
       result = /^\?user=([^?]+)/.exec( window.location.search )
       if result?
         user = decodeURI( result[1] )
-        @verbose( "Auto logging in #{user}" )
+        @verbose( "Auto logging in as #{user}" )
         @login_user( user )
       else
         create = Ext.create( 'Oghma.Ext.EditObject',
@@ -169,6 +181,7 @@ class Oghma.App
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
   verbose: ( msg ) ->
+    @console?.message( 'verbose', msg )
     console.info( msg )
     this
 
@@ -177,6 +190,7 @@ class Oghma.App
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
   warn: ( msg ) ->
+    @console?.message( 'warning', msg, '#ff7f00', '#ff7f00' )
     console.warn( msg )
     this
 
@@ -185,6 +199,7 @@ class Oghma.App
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
   error: ( msg ) ->
+    @console?.message( 'error', msg, '#ff0000', '#ff0000' )
     console.error( msg )
     this
 
@@ -193,5 +208,19 @@ class Oghma.App
   # @param [string] msg Message to send.
   # @return [Oghma.App] this
   debug: ( msg ) ->
+    @console?.message( 'debug', msg, '#0000ff', '#0000ff' )
     console.debug( msg )
     this
+
+  # Send a message from a user to the console
+  #
+  # @param [string] username Name of user.
+  # @param [string] message Message.
+  # @return [Oghma.App] this
+  message: ( from, msg ) ->
+    user = @userverse.user.with_name( from )[0]
+    if ! user?
+      @error( "Message from non-existent user #{from}: #{msg}" )
+    else
+      color = user.gets( 'primary' )
+      @console?.message( from, msg, color, color )

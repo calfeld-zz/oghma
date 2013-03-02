@@ -87,7 +87,6 @@ class Oghma.Login
     @_.O.userverse.login.each( ( thingy ) =>
       [ name, client_id ] = thingy.geta( 'name', 'client_id' )
       if ! @_.clients[ client_id ]?
-        @_.O.verbose( "Stale login #{name} @ #{client_id}" )
         to_delete.push( thingy )
     )
     for thingy in to_delete
