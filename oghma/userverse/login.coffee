@@ -43,11 +43,9 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
         name:      attrs.name      ? throw 'name required.'
         client_id: attrs.client_id ? throw 'client_id required.'
 
-      @after_construction( ->
+      @after_construction( =>
         thingyverse.login.add( this )
-      )
-      @after_construction( ->
-        O.login._.callbacks.login.fire( attrs.name, attrs.client_id )
+        O.login?._.login_create( this )
       )
 
       set: (thingy, attrs) ->
@@ -58,7 +56,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
         thingy.__
 
       remove: ( thingy ) ->
-        O.login._.callbacks.logout.fire( thingy.geta( 'name', 'client_id' )... )
+        O.login?._.login_remove( thingy )
         thingyverse.login.remove( thingy )
         null
   )

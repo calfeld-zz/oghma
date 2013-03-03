@@ -35,6 +35,19 @@ class Oghma.Login
         logout:     jQuery.Callbacks()
         connect:    jQuery.Callbacks()
         disconnect: jQuery.Callbacks()
+      ready: false
+      # Called from Userverse.Login
+      login_create: ( thingy ) =>
+        return if ! @_.ready
+        if @is_client( thingy.gets( 'client_id' ) )
+          @_.callbacks.login.fire( thingy.geta( 'name', 'client_id' )... )
+        null
+      # Called from Userverse.Login
+      login_remove: ( thingy ) =>
+        return if ! @_.ready
+        if @is_client( thingy.gets( 'client_id' ) )
+          @_.callbacks.logout.fire( thingy.geta( 'name', 'client_id' )... )
+        null
 
     @_.O.dictionary.subscribe( 'oghma.login',
       create: ( domain, key, value ) =>
@@ -44,16 +57,24 @@ class Oghma.Login
               @_.clients[ client_id ] = true
               @_.callbacks.connect.fire( client_id )
           when '_subscribe'
-            if @_.clients[ client_id ]?
+            if @_.clients[ value ]?
               @_.O.warn( "Duplicate client: #{client_id}" )
             @_.clients[ value ] = true
-            @_.callbacks.connect.fire( client_id )
+            for login in @_.O.userverse.login.with_client_id( value )
+              @_.callbacks.login.fire( thingy.geta( 'name', 'client_id' )... )
+            @_.callbacks.connect.fire( value )
           when '_unsubscribe'
+            for login in @_.O.userverse.login.with_client_id( value )
+              # Remove will fire logout.
+              login.remove()
             delete @_.clients[ value ]
-            @_.callbacks.disconnect.fire( client_id )
-            @cleanup_logins()
+            @_.callbacks.disconnect.fire( value )
           when '_synced'
+            @_.ready = true
             @cleanup_logins()
+            @_.O.userverse.login.each( ( thingy ) =>
+              @_.callbacks.login.fire( thingy.geta( 'name', 'client_id' )... )
+            )
           else
             @_.O.error( "Unknown key on oghma.login: #{key}" )
         null
@@ -86,11 +107,10 @@ class Oghma.Login
     to_delete = []
     @_.O.userverse.login.each( ( thingy ) =>
       [ name, client_id ] = thingy.geta( 'name', 'client_id' )
-      if ! @_.clients[ client_id ]?
+      if ! @is_client( client_id )
         to_delete.push( thingy )
     )
     for thingy in to_delete
-      [ name, client_id ] = thingy.geta( 'name', 'client_id' )
       thingy.remove()
     this
 
@@ -99,11 +119,15 @@ class Oghma.Login
   # @param [function(name, client_ids)] f Called for each login.
   # @return [array] Return values of `f`.
   each: ( f = ( x... ) -> x ) ->
-    @cleanup_logins()
     @_.O.userverse.login.each_name( ( name ) =>
       client_ids = ( t.gets( 'client_id' ) for t in @_.O.userverse.login.with_name( name ) )
       f( name, client_ids )
     )
+
+  # @param [string] client_id ID of client to query.
+  # @return [boolean] True iff `client_id` is a current client.
+  is_client: ( client_id ) ->
+    @_.clients[ client_id ]?
 
   # @return [array<string>] All connected client ids.
   clients: ->
