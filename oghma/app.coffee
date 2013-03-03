@@ -81,12 +81,11 @@ class Oghma.App
     @tableverse = new Heron.Thingyverse( ready: false )
     Oghma.Thingy.Tableverse.generate( @tableverse, this )
 
-    # Show console
+    # Console
     @console = Ext.create( 'Oghma.Ext.Console',
       x: 50
       y: 50
     )
-    @console.show()
     @on( 'post_login', ( me ) =>
       me.manage_window( 'console', @console )
     )
