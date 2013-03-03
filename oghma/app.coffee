@@ -158,6 +158,14 @@ class Oghma.App
     )
     this
 
+  # @return [userverse.user] Thingy for current user.
+  me: ->
+    username = @userverse.login.with_client_id( @client_id )[0].gets( 'name' )
+    if username?
+      @userverse.user.with_name( username )?[0]
+    else
+      null
+
   # Create a new user.
   #
   # See {#login_phase()}.
