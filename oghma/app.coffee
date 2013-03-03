@@ -26,6 +26,10 @@ root = this
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 class Oghma.App
+  # Callbacks
+  callbacks:
+    post_login: jQuery.Callbacks()
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -156,6 +160,19 @@ class Oghma.App
       document.title,
       encodeURI( "?user=#{username}" )
     )
+    @callbacks.post_login.fire( @me() )
+    this
+
+  # Register callback.
+  #
+  # Available events:
+  # - post_login: Called with user thingy on successful login.
+  #
+  # @param [string] which Which event.
+  # @param [function] f Function to call on specified event.
+  # @return [Oghma.App] this
+  on: ( which, f ) ->
+    @callbacks[ which ].add( f )
     this
 
   # @return [userverse.user] Thingy for current user.
