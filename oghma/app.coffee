@@ -30,6 +30,27 @@ class Oghma.App
   callbacks:
     post_login: jQuery.Callbacks()
 
+  # {Oghma.Console} window.
+  console: null
+
+  # Client ID of this client.
+  client_id: null
+
+  # {Heron.Dictionary}.
+  dictionary: null
+
+  # {Heron.Comet}.
+  comet: null
+
+  # Userverse {Heron.Thingyverse}
+  userverse: null
+
+  # Tableverse {Heron.Thingyverse}
+  tableverse: null
+
+  # {Oghma.Login} Manager.
+  login: null
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
