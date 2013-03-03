@@ -22,6 +22,7 @@
 
 require 'rubygems'
 require 'sinatra'
+require 'thread'
 
 HOME = File.dirname(__FILE__)
 $:.unshift(File.join(HOME, 'server/heron'))
@@ -57,18 +58,35 @@ class OghmaServer < Sinatra::Base
   # /dictionary/messages
   include ::Heron::SinatraDictionary
 
-  dictionary.on_verbose   = -> s     { puts "DICT #{s}"                   }
-  dictionary.on_error     = -> s     { puts "DICT ERROR #{s}"             }
-  dictionary.on_subscribe = -> id, s { puts "DICT SUBSCRIBE [#{id}] #{s}" }
-  dictionary.on_collision = -> s     { puts "DICT COLLISION #{s}"         }
+  OUTPUT_MUTEX = Mutex.new
+  def self.out( s, color = 0 )
+    OUTPUT_MUTEX.synchronize do
+      puts "\e[3#{color}m#{s}\e[0m"
+    end
+  end
+
+  def self.red( s )
+    out( s, 1 )
+  end
+  def self.blue( s )
+    out( s, 4 )
+  end
+  def self.yellow( s )
+    out( s, 3 )
+  end
+
+  dictionary.on_verbose   = -> s     { blue("DICT #{s}")                   }
+  dictionary.on_error     = -> s     { red("DICT ERROR #{s}")              }
+  dictionary.on_subscribe = -> id, s { blue("DICT SUBSCRIBE [#{id}] #{s}") }
+  dictionary.on_collision = -> s     { red("DICT COLLISION #{s}")          }
 
   comet.enable_debug
   comet.client_timeout  = 20
   comet.receive_timeout = 10
 
-  comet.on_connect    = -> client_id { puts "COMET CONNECT #{client_id}"    }
+  comet.on_connect    = -> client_id { yellow "COMET CONNECT #{client_id}"    }
   comet.on_disconnect = -> client_id do
-     puts "COMET DISCONNECT #{client_id}"
+     yellow "COMET DISCONNECT #{client_id}"
      dictionary.disconnected( client_id )
    end
 
