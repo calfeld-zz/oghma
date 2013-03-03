@@ -87,6 +87,10 @@ class Oghma.App
       y: 50
     )
     @console.show()
+    @on( 'post_login', ( me ) =>
+      me.manage_window( 'console', @console )
+    )
+
     @verbose( 'Oghma is connecting...' )
 
     # Connect
