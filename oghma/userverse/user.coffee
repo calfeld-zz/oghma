@@ -47,6 +47,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
             box:      [ 50, 50, 200, 200 ]
       @__managed_windows =
          console: null
+      @__update_guard = false
 
       for w, info of attrs.window
         @__.window[ w ] = info
@@ -55,7 +56,20 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
         thingyverse.user.add( this )
       )
 
-      update_window = ( which ) =>
+      update_info = ( which ) =>
+        return if @__update_guard
+        ext = @__managed_windows[ which ]
+        box = ext.getBox()
+        new_info =
+          visible: ext.isVisible()
+          box:     [ box.x, box.y, box.width, box.height ]
+        window = @gets( 'window' )
+        if window[ which ] != new_info
+          window[ which ] = new_info
+          @set( window: window )
+
+      update_window = ( which, guard = false ) =>
+        @__update_guard = true
         ext      = @__managed_windows[ which ]
         visible  = @__.window[ which ].visible
         box      = @__.window[ which ].box
@@ -65,21 +79,18 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
           ext.hide()
         ext.setPosition( box[0], box[1] )
         ext.setSize( box[2], box[3] )
+        @__update_guard = false
+        if ! guard
+          update_info()
         null
 
       @manage_window = ( which, ext ) ->
         @__managed_windows[ which ] = ext
-        update_info = =>
-          box = ext.getBox()
-          @__.window[ which ] =
-            visible: ext.isVisible()
-            box: [ box.x, box.y, box.width, box.height ]
-          @set( window: @__.window )
-        ext.on( 'resize', update_info )
-        ext.on( 'move',   update_info )
-        ext.on( 'hide',   update_info )
-        ext.on( 'show',   update_info )
-        update_window( which )
+        ext.on( 'resize', -> update_info( which ) )
+        ext.on( 'move',   -> update_info( which ) )
+        ext.on( 'hide',   -> update_info( which ) )
+        ext.on( 'show',   -> update_info( which ) )
+        update_window( which, true )
         this
 
       set: (thingy, attrs) ->
@@ -91,7 +102,8 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
           else
             thingy.__[k] = v
           if k == 'window'
-            update_window( which ) for which of thingy.__managed_windows
+            for which of thingy.__managed_windows
+              update_window( which, true )
 
         null
 
