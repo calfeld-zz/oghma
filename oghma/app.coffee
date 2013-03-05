@@ -128,9 +128,7 @@ class Oghma.App
     @kinetic_panel = Ext.create( 'Oghma.Ext.KineticPanel',
       region: 'center'
     )
-    console.debug('adding kinetic_panel...')
     @viewport.add( @kinetic_panel )
-    console.debug('added kinetic_panel...')
     @stage = @kinetic_panel.stage
 
     @verbose( 'Oghma is connecting...' )

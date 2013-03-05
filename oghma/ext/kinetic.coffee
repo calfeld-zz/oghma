@@ -27,7 +27,6 @@ Ext.define( 'Oghma.Ext.KineticPanel',
   # See ExtJS.
   initComponent: ->
     @on( 'boxready', ( it, width, height ) =>
-      console.debug('added', width, height)
       @stage = new Kinetic.Stage(
         container: @body
         width:     width
