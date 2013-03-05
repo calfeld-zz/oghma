@@ -23,6 +23,10 @@ Oghma = @Oghma ?= {}
 Ext.define( 'Oghma.Ext.Console',
   extend: 'Ext.window.Window'
 
+  statics:
+    # defaultBox used for new users and reset window placement.
+    defaultBox: [ 50, 50, 200, 200 ]
+
   # See ExtJS.
   initComponent: ->
     @_ ?= {}

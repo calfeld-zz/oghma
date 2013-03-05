@@ -131,6 +131,16 @@ class Oghma.App
     @viewport.add( @kinetic_panel )
     @stage = @kinetic_panel.stage
 
+    # Main toolbar.
+    @toolbar_main = Ext.create( 'Ext.toolbar.Toolbar',
+      region: 'north'
+      items: [
+        text: 'Window'
+        menu: Oghma.Menu.window( this )
+      ]
+    )
+    @viewport.add( @toolbar_main )
+
     @verbose( 'Oghma is connecting...' )
 
     # Connect

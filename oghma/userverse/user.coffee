@@ -44,7 +44,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
         window:
           console:
             visible:  true
-            box:      [ 50, 50, 200, 200 ]
+            box:      Oghma.Ext.Console.defaultBox
       @__managed_windows =
          console: null
       @__update_guard = false
