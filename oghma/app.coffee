@@ -30,7 +30,7 @@ class Oghma.App
   callbacks:
     post_login: jQuery.Callbacks()
 
-  # {Oghma.Console} window.
+  # {Oghma.Ext.Console} window.
   console: null
 
   # Client ID of this client.
@@ -50,6 +50,15 @@ class Oghma.App
 
   # {Oghma.Login} Manager.
   login: null
+
+  # Viewport
+  viewport: null
+
+  # {Oghma.Ext.Kinetic} Panel.
+  kinetic_panel: null
+
+  # Synonym for `kinetic_panel.stage`.
+  stage: null
 
   # Constructor
   #
@@ -110,6 +119,19 @@ class Oghma.App
     @on( 'post_login', ( me ) =>
       me.manage_window( 'console', @console )
     )
+
+    # Viewport and Kinetic Panel
+    @viewport = Ext.create(
+      'Ext.container.Viewport',
+      layout: 'border'
+    )
+    @kinetic_panel = Ext.create( 'Oghma.Ext.KineticPanel',
+      region: 'center'
+    )
+    console.debug('adding kinetic_panel...')
+    @viewport.add( @kinetic_panel )
+    console.debug('added kinetic_panel...')
+    @stage = @kinetic_panel.stage
 
     @verbose( 'Oghma is connecting...' )
 
