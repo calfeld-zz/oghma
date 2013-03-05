@@ -59,11 +59,13 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
       update_info = ( which ) =>
         return if @__update_guard
         ext = @__managed_windows[ which ]
-        box = ext.getBox()
+        window= @gets( 'window' )
         new_info =
           visible: ext.isVisible()
-          box:     [ box.x, box.y, box.width, box.height ]
-        window = @gets( 'window' )
+          box:     window[ which ].box
+        if ext.isVisible()
+          box = ext.getBox()
+          new_info.box = [ box.x, box.y, box.width, box.height ]
         if window[ which ] != new_info
           window[ which ] = new_info
           @set( window: window )
