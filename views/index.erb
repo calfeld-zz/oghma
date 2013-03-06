@@ -7,10 +7,20 @@
   <link rel="stylesheet" type="text/css" href='/external/extjs/resources/css/ext-all.css'>
   <script type='application/javascript' src='/external/extjs/bootstrap.js'></script>
   <script type='application/javascript' src='/heron/client/util.js'></script>
-<% Dir.glob("#{HOME}/public/heron/**/*.js").each do |js| %>
+<%
+path_compare = lambda do |a,b|
+  alpha = a.count('/') <=> b.count('/')
+  if alpha == 0
+    a <=> b
+  else
+    alpha
+  end
+end
+%>
+<% Dir.glob("#{HOME}/public/heron/**/*.js").sort(&path_compare).each do |js| %>
   <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
 <% end %>
-<% Dir.glob("#{HOME}/public/oghma/**/*.js").each do |js| %>
+<% Dir.glob("#{HOME}/public/oghma/**/*.js").sort(&path_compare).each do |js| %>
   <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
 <% end %>
 
