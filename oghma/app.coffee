@@ -137,7 +137,11 @@ class Oghma.App
     @stage = @kinetic_panel.stage
     @kinetic_panel.getEl().on( 'click', ( e ) =>
       pt = e.getPoint()
-      @apply_dropper( pt.x, pt.y, e )
+      @apply_dropper(
+        pt.x - @kinetic_panel.getEl().getX(),
+        pt.y - @kinetic_panel.getEl().getY(),
+        e
+      )
       null
     )
 
