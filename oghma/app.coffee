@@ -60,6 +60,11 @@ class Oghma.App
   # Synonym for `kinetic_panel.stage`.
   stage: null
 
+  # Dropper
+  #
+  # Funcion to apply on next click to stage.
+  dropper: null
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -130,6 +135,11 @@ class Oghma.App
     )
     @viewport.add( @kinetic_panel )
     @stage = @kinetic_panel.stage
+    @kinetic_panel.getEl().on( 'click', ( e ) =>
+      pt = e.getPoint()
+      @apply_dropper( pt.x, pt.y, e )
+      null
+    )
 
     # Main toolbar.
     @toolbar_main = Ext.create( 'Ext.toolbar.Toolbar',
@@ -303,3 +313,31 @@ class Oghma.App
     else
       color = user.gets( 'primary' )
       @console?.message( from, msg, color, color )
+
+  # Load a function into the dropper.
+  #
+  # @param [function(x, y, event)] Event to load.
+  # @return [Oghma.App] this
+  load_dropper: ( f ) ->
+    @dropper = f
+    document.body.style.cursor = 'crosshair'
+    this
+
+  # Unload the dropper.
+  #
+  # @return [Oghma.App] this
+  unload_dropper: ->
+    @dropper = null
+    document.body.style.cursor = 'default'
+    this
+
+  # Apply the dropper.
+  #
+  # @param [numeric] x X stage location.
+  # @param [numeric] y Y stage location.
+  # @param [Object] e Event
+  # @return [Oghma.App] this
+  apply_dropper: ( x, y, e = null ) ->
+    @dropper?( x, y, e )
+    @unload_dropper()
+    this
