@@ -60,12 +60,14 @@ class Oghma.App
   # Synonym for `kinetic_panel.stage`.
   stage: null
 
+  # {Oghma.Action} instance.
+  action: null
+
   # Layers
   layer:
     dice: null
 
   # GM Username
-  #
   GM: 'GM'
 
   # Constructor
@@ -130,6 +132,9 @@ class Oghma.App
     @on( 'post_login', ( me ) =>
       me.manage_window( 'console', @console )
     )
+
+    # Action
+    @action = new Oghma.Action( this )
 
     # Viewport and Kinetic Panel
     @viewport = Ext.create(

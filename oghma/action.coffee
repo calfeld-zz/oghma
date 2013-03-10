@@ -1,4 +1,3 @@
-
 # Copyright 2010-2013 Christopher Alfeld
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +13,21 @@
 # limitations under the License.
 
 Oghma = @Oghma ?= {}
-Oghma.Menu ?= {}
 
-# dice menu.
+# Oghma Action Environment
 #
-# @param [Oghma.App] App.
-# @return [Ext.menu.Menu] Dice menu.
+# This class will be extended by code in action/.  It provides "actions",
+# code that modifies the table, with this class serving as a holding location
+# and environment.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
-Oghma.Menu.dice = ( O ) ->
-  dice = [ 4, 6, 8, 10, 12, 20, 100 ]
-  items = []
+class Oghma.Action
+  # Oghma.App
+  O: null
 
-  for die in dice
-    do ( die ) =>
-      items.push(
-        text: "d#{die}"
-        handler: ( item, e ) =>
-          O.table.load_dropper( ( x, y, e ) ->
-            O.action.roll_die( die, x, y, e.shiftKey )
-          )
-      )
-  items.push('-')
-  items.push(
-      text: "Shift-Drop for private."
-      disabled: true
-  )
-
-  menu = Ext.create( 'Ext.menu.Menu', items: items )
+  # Constructor.
+  #
+  # @param [Oghma.App] O Oghma.App instance.
+  constructor: ( O ) ->
+    @O = O
