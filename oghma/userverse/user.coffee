@@ -36,6 +36,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
     [ 'name' ],
     colors: [ 'primary', 'secondary' ]
     window: [ 'window' ]
+    table:  [ 'zoom' ]
     ( attrs ) ->
       @__ =
         name:      attrs.name      ? 'Guest'
@@ -45,6 +46,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
           console:
             visible:  true
             box:      Oghma.Ext.Console.defaultBox
+        zoom:      attrs.zoom ? O.table.defaultZoom
       @__managed_windows =
          console: null
       @__update_guard = false
@@ -55,6 +57,8 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
       @after_construction( ->
         thingyverse.user.add( this )
       )
+
+      O.table.setZoom( @__.zoom )
 
       update_info = ( which ) =>
         return if @__update_guard
@@ -95,7 +99,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
         update_window( which, true )
         this
 
-      set: (thingy, attrs) ->
+      set: ( thingy, attrs, local_data ) ->
         for k, v of attrs
           if k == 'name'
             thingyverse.user.remove( thingy )
@@ -106,6 +110,8 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
           if k == 'window'
             for which of thingy.__managed_windows
               update_window( which, true )
+          if k == 'zoom' && ! local_data
+            O.table.setZoom( v )
 
         null
 
