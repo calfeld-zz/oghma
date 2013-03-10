@@ -35,6 +35,9 @@ Ext.define( 'Oghma.Ext.Table',
   # The underlying keymap for keyboard bindings.  Use {#bind} instead.
   keymap: null
 
+  # Called when zoom level changes with zoom level.
+  onZoom: null
+
   # See ExtJS.
   initComponent: ->
 
@@ -142,6 +145,7 @@ Ext.define( 'Oghma.Ext.Table',
   setZoom: ( zoom ) ->
     @stage.setScale( zoom, zoom )
     @stage.draw()
+    @onZoom?( zoom )
 
   # Get zoom level.
   #
