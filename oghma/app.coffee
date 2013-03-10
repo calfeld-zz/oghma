@@ -251,6 +251,11 @@ class Oghma.App
     else
       null
 
+  # @param [Heron.Map] item Item to check ownership.
+  # @return [boolean] true iff owner property of `item` is current user.
+  i_own: ( map ) ->
+    map.gets( 'owner' ) == @me().gets( 'name' )
+
   # Create a new user.
   #
   # See {#login_phase()}.
