@@ -25,17 +25,19 @@ Oghma.Menu ?= {}
 # @copyright 2013 Christopher Alfeld
 Oghma.Menu.window = ( O ) ->
   Ext.create( 'Ext.menu.Menu',
+    listeners:
+      beforeshow: ->
+        @child( '#console' ).setChecked( O.console.isVisible() )
     items: [
       {
         text:    'Console'
+        id:      'console'
         checked: true
         checkHandler: ( item, state ) ->
           if state
             O.console.show()
           else
             O.console.hide()
-        listeners: beforerender: ->
-          @setChecked( O.console.isVisible() )
       },
       '-',
       {
