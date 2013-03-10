@@ -24,32 +24,35 @@ Oghma.Menu ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Oghma.Menu.dice = ( O ) ->
-  dice = [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 20, 100 ]
+  dice = [ 4, 6, 8, 10, 12, 20, 100 ]
   items = []
+  roll_die = ( sides, x, y, e ) ->
+    is_private = e.shiftKey
+    if is_private
+      r = 18
+      font_size = 18
+      visible_to = [ O.me().gets( 'name' ), O.GM ]
+    else
+      r = 25
+      font_size = 24
+      visible_to = null
+    O.tableverse.create( 'dice',
+      sides:      sides
+      x:          x
+      y:          y
+      r:          r
+      font_size:  font_size
+      visible_to: visible_to
+    )
+    null
+
   for die in dice
     do ( die ) =>
       items.push(
         text: "d#{die}"
         handler: ( item, e ) =>
           O.load_dropper( ( x, y, e ) ->
-            is_private = e.shiftKey
-            if is_private
-              r = 18
-              font_size = 18
-              visible_to = [ O.me().gets( 'name' ), O.GM ]
-            else
-              r = 25
-              font_size = 24
-              visible_to = null
-            O.tableverse.create( 'dice',
-              sides:      die
-              x:          x
-              y:          y
-              r:          r
-              font_size:  font_size
-              visible_to: visible_to
-            )
-            null
+            roll_die( die, x, y, e )
           )
       )
   items.push('-')
