@@ -34,7 +34,7 @@ Ext.define( 'Oghma.Ext.EditObject',
   # - auto
   types: {}
 
-  # Function to call with edited object if save is pressed. (Required0)
+  # Function to call with edited object if save is pressed. (Required)
   onSave: false
 
   # Function to call if cancel is pressed. (Required)
