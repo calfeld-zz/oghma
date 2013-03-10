@@ -59,6 +59,8 @@ Ext.define( 'Oghma.Ext.Table',
     pos = @stage.getMousePosition()
     if pos?
       [ @tX( pos.x ), @tY( pos.y ) ]
+    else
+      [ null, null ]
 
   # Convert client X to table X:
   tX: ( x ) ->
