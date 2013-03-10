@@ -53,11 +53,11 @@ Ext.define( 'Oghma.Ext.Table',
 
   # Convert client X to table X:
   tX: ( x ) ->
-    x - @getEl().getX()
+    ( x - @getEl().getX() ) / @stage.getScale().x
 
   # Convert client X to table X:
   tY: ( y ) ->
-    y - @getEl().getY()
+    ( y - @getEl().getY() ) / @stage.getScale().y
 
   # Load a function into the dropper.
   #
