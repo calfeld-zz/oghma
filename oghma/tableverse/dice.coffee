@@ -91,10 +91,12 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
               @remove()
           )
 
-        msg = "d#{@__.sides} = #{@__.value}"
-        if @__.visible_to.length != 0
-          msg += " [#{@__.visible_to.join(', ')}]"
-        O.console.message( O.me().gets( 'name' ), msg )
+        # Don't emit messages for dice created during sync process.
+        if thingyverse.synced()
+          msg = "d#{@__.sides} = #{@__.value}"
+          if @__.visible_to.length != 0
+            msg += " [#{@__.visible_to.join(', ')}]"
+          O.console.message( O.me().gets( 'name' ), msg )
 
       set: (thingy, attrs) ->
         throw "Can't modify dice."
