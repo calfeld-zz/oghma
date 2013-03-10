@@ -91,7 +91,10 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
               @remove()
           )
 
-        O.console.message( O.me().gets( 'name' ), "d#{@__.sides} = #{@__.value}" )
+        msg = "d#{@__.sides} = #{@__.value}"
+        if @__.visible_to.length != 0
+          msg += " [#{@__.visible_to.join(', ')}]"
+        O.console.message( O.me().gets( 'name' ), msg )
 
       set: (thingy, attrs) ->
         throw "Can't modify dice."

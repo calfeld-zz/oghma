@@ -31,21 +31,30 @@ Oghma.Menu.dice = ( O ) ->
       items.push(
         text: "d#{die}"
         handler: ( item, e ) =>
-          is_private = e.shiftKey
-
-          # debug
-          O.load_dropper( ( x, y ) ->
+          O.load_dropper( ( x, y, e ) ->
+            is_private = e.shiftKey
+            if is_private
+              r = 18
+              font_size = 18
+              visible_to = [ O.me().gets( 'name' ), O.GM ]
+            else
+              r = 25
+              font_size = 24
+              visible_to = null
             O.tableverse.create( 'dice',
-              sides: die
-              x:      x
-              y:      y
+              sides:      die
+              x:          x
+              y:          y
+              r:          r
+              font_size:  font_size
+              visible_to: visible_to
             )
             null
           )
       )
   items.push('-')
   items.push(
-      text: "Hold shift for private."
+      text: "Shift-Drop for private."
       disabled: true
   )
 

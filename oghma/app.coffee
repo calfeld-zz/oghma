@@ -69,6 +69,10 @@ class Oghma.App
   # Funcion to apply on next click to stage.
   dropper: null
 
+  # GM Username
+  #
+  GM: 'GM'
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
