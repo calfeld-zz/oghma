@@ -45,7 +45,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         owner:      attrs.owner      ? O.me().gets( 'name' )
         visible_to: attrs.visible_to ? []
 
-      @__.value ?= Heron.Util.rand( @__.sides )
+      @__.value ?= Heron.Util.rand( @__.sides ) + 1
 
       @after_construction( ->
         thingyverse.dice.add( this )
