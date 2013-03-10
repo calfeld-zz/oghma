@@ -51,7 +51,7 @@ Oghma.Menu.dice = ( O ) ->
       items.push(
         text: "d#{die}"
         handler: ( item, e ) =>
-          O.load_dropper( ( x, y, e ) ->
+          O.table.load_dropper( ( x, y, e ) ->
             roll_die( die, x, y, e )
           )
       )

@@ -64,11 +64,6 @@ class Oghma.App
   layer:
     dice: null
 
-  # Dropper
-  #
-  # Funcion to apply on next click to stage.
-  dropper: null
-
   # GM Username
   #
   GM: 'GM'
@@ -141,22 +136,13 @@ class Oghma.App
       'Ext.container.Viewport',
       layout: 'border'
     )
-    @kinetic_panel = Ext.create( 'Oghma.Ext.KineticPanel',
+    @table = Ext.create( 'Oghma.Ext.Table',
       region: 'center'
     )
-    @viewport.add( @kinetic_panel )
-    @stage = @kinetic_panel.stage
+    @viewport.add( @table )
+    @stage = @table.stage
     @layer.dice = new Kinetic.Layer()
     @stage.add( @layer.dice )
-    @kinetic_panel.getEl().on( 'click', ( e ) =>
-      pt = e.getPoint()
-      @apply_dropper(
-        pt.x - @kinetic_panel.getEl().getX(),
-        pt.y - @kinetic_panel.getEl().getY(),
-        e
-      )
-      null
-    )
 
     # Main toolbar.
     @toolbar_main = Ext.create( 'Ext.toolbar.Toolbar',
@@ -345,31 +331,3 @@ class Oghma.App
     else
       color = user.gets( 'primary' )
       @console?.message( from, msg, color, color )
-
-  # Load a function into the dropper.
-  #
-  # @param [function(x, y, event)] Event to load.
-  # @return [Oghma.App] this
-  load_dropper: ( f ) ->
-    @dropper = f
-    document.body.style.cursor = 'crosshair'
-    this
-
-  # Unload the dropper.
-  #
-  # @return [Oghma.App] this
-  unload_dropper: ->
-    @dropper = null
-    document.body.style.cursor = 'default'
-    this
-
-  # Apply the dropper.
-  #
-  # @param [numeric] x X stage location.
-  # @param [numeric] y Y stage location.
-  # @param [Object] e Event
-  # @return [Oghma.App] this
-  apply_dropper: ( x, y, e = null ) ->
-    @dropper?( x, y, e )
-    @unload_dropper()
-    this
