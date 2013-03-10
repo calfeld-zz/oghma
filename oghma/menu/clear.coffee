@@ -23,7 +23,7 @@ Oghma.Menu ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Oghma.Menu.clear = ( O ) ->
-  menu = Ext.create( 'Ext.menu.Menu',
+  Ext.create( 'Ext.menu.Menu',
     listeners:
       beforeshow: ->
         @child( '#dice' ).setDisabled( O.tableverse.dice.empty() )
