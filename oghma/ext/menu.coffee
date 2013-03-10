@@ -13,35 +13,22 @@
 # limitations under the License.
 
 Oghma = @Oghma ?= {}
-Oghma.Menu ?= {}
 
-# clear menu.
+# Ext.menu.Menu with bug workarounds.
 #
-# @param [Oghma.App] App.
-# @return [Oghma.Ext.Menu] Clear menu.
+# This class is identical to Ext.menu.Menu but fixes an issue where menus do
+# not always blur themselves when an item is activated.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
-Oghma.Menu.clear = ( O ) ->
-  Ext.create( 'Oghma.Ext.Menu',
-    listeners:
-      beforeshow: ->
-        @child( '#dice' ).setDisabled( O.tableverse.dice.empty() )
-    items: [
-      {
-        text:    'Dice'
-        id:      'dice'
-        handler: ( item, e ) =>
-          all = e.shiftKey
-          O.tableverse.dice.each( ( die ) ->
-            if all || O.i_own( die )
-              die.remove()
-          )
-      },
-      '-',
-      {
-        text: "Hold shift for all (vs. mine)."
-        disabled: true
-      }
-    ]
-  )
+Ext.define( 'Oghma.Ext.Menu',
+  extend: 'Ext.menu.Menu'
+
+  # See ExtJS.
+  initComponent: ->
+    @callParent( arguments )
+
+    @on( 'hide', @blur )
+
+    null
+)

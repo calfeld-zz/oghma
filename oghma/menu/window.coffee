@@ -19,12 +19,12 @@ Oghma.Menu ?= {}
 # window menu.
 #
 # @param [Oghma.App] App.
-# @return [Ext.menu.Menu] Window menu.
+# @return [Oghma.Ext.Menu] Window menu.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Oghma.Menu.window = ( O ) ->
-  Ext.create( 'Ext.menu.Menu',
+  Ext.create( 'Oghma.Ext.Menu',
     listeners:
       beforeshow: ->
         @child( '#console' ).setChecked( O.console.isVisible() )

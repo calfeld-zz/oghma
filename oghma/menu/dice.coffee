@@ -18,7 +18,7 @@ Oghma.Menu ?= {}
 # dice menu.
 #
 # @param [Oghma.App] App.
-# @return [Ext.menu.Menu] Dice menu.
+# @return [Oghma.Ext.Menu] Dice menu.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
@@ -41,4 +41,4 @@ Oghma.Menu.dice = ( O ) ->
       disabled: true
   )
 
-  menu = Ext.create( 'Ext.menu.Menu', items: items )
+  menu = Ext.create( 'Oghma.Ext.Menu', items: items )

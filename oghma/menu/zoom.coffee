@@ -18,7 +18,7 @@ Oghma.Menu ?= {}
 # Zoom menu.
 #
 # @param [Oghma.App] App.
-# @return [Ext.menu.Menu] Zoom menu.
+# @return [Oghma.Ext.Menu] Zoom menu.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
@@ -51,7 +51,7 @@ Oghma.Menu.zoom = ( O ) ->
           O.table.setZoom( zoom )
       )
 
-  Ext.create( 'Ext.menu.Menu',
+  Ext.create( 'Oghma.Ext.Menu',
     items: items
     listeners:
       beforeshow: ->
