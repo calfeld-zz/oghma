@@ -21,6 +21,12 @@ Oghma = @Oghma ?= {}
 Ext.define( 'Oghma.Ext.Table',
   extend: 'Oghma.Ext.KineticPanel'
 
+  # Zoom levels.
+  zoomLevels: [ 0.25, 0.5, 0.75, 1, 1.5, 2, 3 ]
+
+  # Default zoom level.
+  defaultZoom: 1
+
   # Dropper
   #
   # Funcion to apply on next click to stage.
@@ -53,11 +59,11 @@ Ext.define( 'Oghma.Ext.Table',
 
   # Convert client X to table X:
   tX: ( x ) ->
-    ( x - @getEl().getX() ) / @stage.getScale().x
+    ( x - @getEl().getX() ) / @getZoom()
 
   # Convert client X to table X:
   tY: ( y ) ->
-    ( y - @getEl().getY() ) / @stage.getScale().y
+    ( y - @getEl().getY() ) / @getZoom()
 
   # Load a function into the dropper.
   #
@@ -103,7 +109,7 @@ Ext.define( 'Oghma.Ext.Table',
   # @option binding [Object] scope Scope of `handler`.
   # @option binding [String] defaultEventAction Default action to apply.  See
   #   ExtJS documentation for options and discussion.
-  # @return [Oghma.Keyboard] this
+  # @return [Oghma.Ext.Table] this
   addBinding: ( binding ) ->
     binding = Ext.clone( binding )
     if binding.fn
@@ -124,8 +130,50 @@ Ext.define( 'Oghma.Ext.Table',
   # Add multiple bindings.
   #
   # @param [Object] ons Map of key code to handler.
-  # @return [Oghma.Keyboard] this
+  # @return [Oghma.Ext.Table] this
   onKeys: ( ons ) ->
     for key, handler of ons
       @onKey( key, handler )
+
+  # Set zoom level.
+  #
+  # @param [Float] zoom Zoom level.
+  # @return [Oghma.Ext.Table] this
+  setZoom: ( zoom ) ->
+    @stage.setScale( zoom, zoom )
+    @stage.draw()
+
+  # Get zoom level.
+  #
+  # @return [Float] Current zoom level.
+  getZoom: ->
+    @stage.getScale().x
+
+  # Increase zoom level.
+  #
+  # If current zoom level is not in zoomLevels, sets to default.
+  # If already at highest zoom level, does nothing.
+  # @return [Oghma.Ext.Table] this
+  increaseZoom: ->
+    zoom = @getZoom()
+    i = @zoomLevels.indexOf( zoom )
+    if i == -1
+      @setZoom( @defaultZoom )
+    else if @zoomLevels[ i + 1 ]?
+      @setZoom( @zoomLevels[ i + 1 ] )
+    this
+
+  # Decrease zoom level.
+  #
+  # If current zoom level is not in zoomLevels, sets to default.
+  # If already at lowest zoom level, does nothing.
+  # @return [Oghma.Ext.Table] this
+  decreaseZoom: ->
+    zoom = @getZoom()
+    i = @zoomLevels.indexOf( zoom )
+    if i == -1
+      @setZoom( @defaultZoom )
+    else if @zoomLevels[ i - 1 ]?
+      @setZoom( @zoomLevels[ i - 1 ] )
+    this
 )

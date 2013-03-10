@@ -165,6 +165,10 @@ class Oghma.App
           menu: Oghma.Menu.clear( this )
         },
         {
+          text: 'Zoom'
+          menu: Oghma.Menu.zoom( this )
+        },
+        {
           text: 'Window'
           menu: Oghma.Menu.window( this )
         }
