@@ -149,6 +149,9 @@ class Oghma.App
     @layer.dice = new Kinetic.Layer()
     @stage.add( @layer.dice )
 
+    # Set up keybindings.
+    Oghma.bind_keys( this )
+
     # Main toolbar.
     @toolbar_main = Ext.create( 'Ext.toolbar.Toolbar',
       region: 'north'
