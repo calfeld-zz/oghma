@@ -40,7 +40,6 @@ Ext.define( 'Oghma.Ext.Table',
 
   # See ExtJS.
   initComponent: ->
-
     @callParent( arguments )
 
     @on( 'afterrender', =>
@@ -50,7 +49,7 @@ Ext.define( 'Oghma.Ext.Table',
       )
     )
 
-    @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getBody() )
+    @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getDoc() )
 
     null
 
@@ -122,7 +121,8 @@ Ext.define( 'Oghma.Ext.Table',
       delete binding.fn
     bound_handler = binding.handler
     binding.handler = ( args... ) =>
-      if document.activeElement == document.body
+      active = Ext.get( Ext.Element.getActiveElement() )
+      if active == Ext.getBody() || ! active.isVisible()
         pass = [ @mouse()..., args... ]
         bound_handler.apply( binding.scope, pass )
     @keymap.addBinding( binding )
