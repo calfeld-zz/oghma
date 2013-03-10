@@ -26,9 +26,6 @@ Ext.define( 'Oghma.Ext.Table',
   # Funcion to apply on next click to stage.
   dropper: null
 
-  # Last location of mouse in table coordinates.
-  mouse: null
-
   # The underlying keymap for keyboard bindings.  Use {#bind} instead.
   keymap: null
 
@@ -42,15 +39,17 @@ Ext.define( 'Oghma.Ext.Table',
         @apply_dropper( @tX( e.getX() ), @tY( e.getY() ), e )
         null
       )
-
-      @getEl().on( 'mousemove', ( e ) =>
-        @mouse = [ @tX( e.getX() ), @tY( e.getY() ) ]
-      )
     )
 
     @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getBody() )
 
     null
+
+  # Mouse position in table coordinates.
+  mouse: ->
+    pos = @stage.getMousePosition()
+    if pos?
+      [ tX( pos.x ), tY( pos.y ) ]
 
   # Convert client X to table X:
   tX: ( x ) ->
@@ -113,7 +112,7 @@ Ext.define( 'Oghma.Ext.Table',
     bound_handler = binding.handler
     binding.handler = ( args... ) =>
       if document.activeElement == document.body
-        pass = [ @mouse..., args... ]
+        pass = [ @mouse()..., args... ]
         bound_handler.apply( binding.scope, pass )
     @keymap.addBinding( binding )
     this
