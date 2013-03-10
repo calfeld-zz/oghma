@@ -87,7 +87,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
         for name, k of @__k
           k.on( 'click', ( event )=>
-            if O.me().gets( 'name' ) == @__.owner || event.shiftKey
+            if O.i_own( this ) || event.shiftKey
               @remove()
           )
 
