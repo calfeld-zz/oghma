@@ -30,4 +30,8 @@ Oghma.bind_keys = ( O ) ->
         O.action.roll_die( sides, x, y, e.shiftKey )
       )
 
+  # +
+  O.table.onKey( 187, -> O.table.increaseZoom() )
+  # -
+  O.table.onKey( 189, -> O.table.decreaseZoom() )
   null
