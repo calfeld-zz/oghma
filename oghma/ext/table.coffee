@@ -29,6 +29,9 @@ Ext.define( 'Oghma.Ext.Table',
   # Last location of mouse in table coordinates.
   mouse: null
 
+  # The underlying keymap for keyboard bindings.  Use {#bind} instead.
+  keymap: null
+
   # See ExtJS.
   initComponent: ->
 
@@ -44,6 +47,8 @@ Ext.define( 'Oghma.Ext.Table',
         @mouse = [ @tX( e.getX() ), @tY( e.getY() ) ]
       )
     )
+
+    @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getBody() )
 
     null
 
@@ -82,4 +87,46 @@ Ext.define( 'Oghma.Ext.Table',
     @dropper?( x, y, e )
     @unload_dropper()
     this
+
+  # Add a binding.
+  #
+  # This method is similar to Ext.util.KeyMap#addBinding but executes if the
+  # key is pressed anywhere with the body as focus.  The handler will be
+  # passed the mouse x and y location in tabletop coordinates, followed by the
+  # usual handler arguments.
+  #
+  # @param [Object] binding Binding to add.
+  # @option binding [String/Array] key Keycode or array of keycodes to bind.
+  # @option binding [Boolean] shift True if shift is required.
+  # @option binding [Boolean] ctrl  True if ctrl is required.
+  # @option binding [Boolean] alt   True if alt is required.
+  # @option binding [Function] handler Function call if key is pressed.
+  # @option binding [Object] scope Scope of `handler`.
+  # @option binding [String] defaultEventAction Default action to apply.  See
+  #   ExtJS documentation for options and discussion.
+  # @return [Oghma.Keyboard] this
+  addBinding: ( binding ) ->
+    binding = Ext.clone( binding )
+    if binding.fn
+      binding.handler = binding.fn
+      delete binding.fn
+    bound_handler = binding.handler
+    binding.handler = ( args... ) =>
+      if document.activeElement == document.body
+        pass = [ @mouse..., args... ]
+        bound_handler.apply( binding.scope, pass )
+    @keymap.addBinding( binding )
+    this
+
+  # Synonym for `addBinding( key: key, handler: handler)`
+  onKey: ( key, handler ) ->
+    @addBinding( key: key, handler: handler )
+
+  # Add multiple bindings.
+  #
+  # @param [Object] ons Map of key code to handler.
+  # @return [Oghma.Keyboard] this
+  onKeys: ( ons ) ->
+    for key, handler of ons
+      @onKey( key, handler )
 )
