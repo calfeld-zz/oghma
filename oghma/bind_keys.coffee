@@ -35,3 +35,6 @@ Oghma.bind_keys = ( O ) ->
   # -
   O.table.onKey( 189, -> O.table.decreaseZoom() )
   null
+
+  # Escape
+  O.table.onKey( 27, -> O.table.unload_dropper() )
