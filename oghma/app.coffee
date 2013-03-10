@@ -60,6 +60,10 @@ class Oghma.App
   # Synonym for `kinetic_panel.stage`.
   stage: null
 
+  # Layers
+  layer:
+    dice: null
+
   # Dropper
   #
   # Funcion to apply on next click to stage.
@@ -138,6 +142,8 @@ class Oghma.App
     )
     @viewport.add( @kinetic_panel )
     @stage = @kinetic_panel.stage
+    @layer.dice = new Kinetic.Layer()
+    @stage.add( @layer.dice )
     @kinetic_panel.getEl().on( 'click', ( e ) =>
       pt = e.getPoint()
       @apply_dropper(
@@ -152,8 +158,18 @@ class Oghma.App
     @toolbar_main = Ext.create( 'Ext.toolbar.Toolbar',
       region: 'north'
       items: [
-        text: 'Window'
-        menu: Oghma.Menu.window( this )
+        {
+          text: 'Dice'
+          menu: Oghma.Menu.dice( this )
+        },
+        {
+          text: 'Clear'
+          menu: Oghma.Menu.clear( this )
+        },
+        {
+          text: 'Window'
+          menu: Oghma.Menu.window( this )
+        }
       ]
     )
     @viewport.add( @toolbar_main )
