@@ -26,6 +26,9 @@ Ext.define( 'Oghma.Ext.Table',
   # Funcion to apply on next click to stage.
   dropper: null
 
+  # Last location of mouse in table coordinates.
+  mouse: null
+
   # See ExtJS.
   initComponent: ->
 
@@ -35,6 +38,10 @@ Ext.define( 'Oghma.Ext.Table',
       @getEl().on( 'click', ( e ) =>
         @apply_dropper( @tX( e.getX() ), @tY( e.getY() ), e )
         null
+      )
+
+      @getEl().on( 'mousemove', ( e ) =>
+        @mouse = [ @tX( e.getX() ), @tY( e.getY() ) ]
       )
     )
 
