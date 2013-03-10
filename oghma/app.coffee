@@ -266,11 +266,12 @@ class Oghma.App
 
   # @return [userverse.user] Thingy for current user.
   me: ->
-    username = @userverse.login.with_client_id( @client_id )[0].gets( 'name' )
-    if username?
-      @userverse.user.with_name( username )?[0]
-    else
-      null
+    logins = @userverse.login.with_client_id( @client_id )
+    if logins? && logins.length > 0
+      username = logins[0].gets( 'name' )
+      if username?
+        return @userverse.user.with_name( username )?[0]
+    null
 
   # @param [Heron.Map] item Item to check ownership.
   # @return [boolean] true iff owner property of `item` is current user.
