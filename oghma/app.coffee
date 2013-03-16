@@ -63,6 +63,9 @@ class Oghma.App
   # {Oghma.Action} instance.
   action: null
 
+  # Keymap for global keyboard shortcuts.
+  keymap: null
+
   # Layers
   layer:
     dice: null
@@ -149,6 +152,9 @@ class Oghma.App
     @stage = @table.stage
     @layer.dice = new Kinetic.Layer()
     @stage.add( @layer.dice )
+
+    # Set up keymap
+    @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getDoc() )
 
     # Set up keybindings.
     Oghma.bind_keys( this )
