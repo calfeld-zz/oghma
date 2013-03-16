@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby1.9
+#!/usr/bin/env ruby2.0
 
 # Copyright 2013 Christopher Alfeld
 #
