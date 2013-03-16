@@ -19,7 +19,7 @@ Oghma = @Oghma ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Ext.define( 'Oghma.Ext.Table',
-  extend: 'Oghma.Ext.KineticPanel'
+  extend: 'Oghma.Ext.InfiniteKineticPanel'
 
   # Zoom levels.
   zoomLevels: [ 0.25, 0.5, 0.75, 1, 1.5, 2, 3 ]
@@ -140,21 +140,6 @@ Ext.define( 'Oghma.Ext.Table',
   onKeys: ( ons ) ->
     for key, handler of ons
       @onKey( key, handler )
-
-  # Set zoom level.
-  #
-  # @param [Float] zoom Zoom level.
-  # @return [Oghma.Ext.Table] this
-  setZoom: ( zoom ) ->
-    @stage.setScale( zoom, zoom )
-    @stage.draw()
-    @onZoom?( zoom )
-
-  # Get zoom level.
-  #
-  # @return [Float] Current zoom level.
-  getZoom: ->
-    @stage.getScale().x
 
   # Increase zoom level.
   #
