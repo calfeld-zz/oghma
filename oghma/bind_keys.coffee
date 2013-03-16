@@ -14,6 +14,7 @@
 
 Oghma = @Oghma ?= {}
 
+
 Oghma.bind_keys = ( O ) ->
   dice_map =
     '1': 20
@@ -23,6 +24,18 @@ Oghma.bind_keys = ( O ) ->
     '5': 10
     '6': 12
     '0': 100
+
+  bind_both = ( key, handler ) ->
+    O.table.addBinding(
+      key:     key
+      ctrl:    false
+      handler: handler
+    )
+    O.keymap.addBinding(
+      key:     key
+      ctrl:    true
+      handler: handler
+    )
 
   for k, sides of dice_map
     do ( sides ) ->
@@ -42,24 +55,13 @@ Oghma.bind_keys = ( O ) ->
       )
 
   # +
-  O.table.onKey( 187, -> O.table.increaseZoom() )
+  bind_both( 187, -> O.table.increaseZoom() )
   # -
-  O.table.onKey( 189, -> O.table.decreaseZoom() )
-  null
+  bind_both( 189, -> O.table.decreaseZoom() )
 
   # Escape
-  O.table.onKey( 27, -> O.table.unload_dropper() )
+  bind_both( 27, -> O.table.unload_dropper() )
 
   # Return to origin
-  O.table.addBinding(
-    key: 'o'
-    ctrl: false
-    handler: ->
-      O.action.return_to_origin()
-  )
-  O.keymap.addBinding(
-    key: 'o'
-    ctrl: true
-    handler: ->
-      O.action.return_to_origin()
-  )
+  bind_both( 'o', -> O.action.return_to_origin() )
+  null
