@@ -37,6 +37,10 @@ Thread.abort_on_exception = true
 
 class OghmaServer < Sinatra::Base
   set :public_folder, File.join(HOME, 'public')
+
+  # Clients can list this tree.
+  RESOURCES = "resources"
+
   enable :static
   enable :threaded
   enable :run
@@ -95,6 +99,26 @@ class OghmaServer < Sinatra::Base
 
   get '/' do
     erb :index
+  end
+
+  def list_resources(params)
+    return 404 if params[:splat].length != 1
+    prefix = params[:splat][0]
+    return 404 if prefix !~ /^[\/_\w]+$/
+    full_prefix = File.join(settings.public_folder, RESOURCES, prefix)
+    Dir.glob("#{full_prefix}/**/*").select do |path|
+      yield path
+    end.collect do |path|
+      path.sub("#{full_prefix}/", '')
+    end.to_json
+  end
+
+  get '/resource_files/*' do
+    list_resources(params) {|path| File.file?(path)}
+  end
+
+  get '/resource_directories/*' do
+    list_resources(params) {|path| File.directory?(path)}
   end
 
   at_exit { dictionary.shutdown }
