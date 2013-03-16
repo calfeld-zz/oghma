@@ -15,16 +15,22 @@
 Oghma = @Oghma ?= {}
 Oghma.Menu ?= {}
 
-# Zoom menu.
+# View menu.
 #
 # @param [Oghma.App] App.
 # @return [Oghma.Ext.Menu] Zoom menu.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
-Oghma.Menu.zoom = ( O ) ->
+Oghma.Menu.view = ( O ) ->
   to_text = ( zoom ) -> Math.floor( zoom * 100 )
   items = [
+    {
+      text: 'Return to Origin'
+      handler: ->
+        O.action.return_to_origin()
+    },
+    '-',
     {
       text: 'Zoom In'
       id:   'zoom_in'

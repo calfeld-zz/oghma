@@ -49,3 +49,17 @@ Oghma.bind_keys = ( O ) ->
 
   # Escape
   O.table.onKey( 27, -> O.table.unload_dropper() )
+
+  # Return to origin
+  O.table.addBinding(
+    key: 'o'
+    ctrl: false
+    handler: ->
+      O.action.return_to_origin()
+  )
+  O.keymap.addBinding(
+    key: 'o'
+    ctrl: true
+    handler: ->
+      O.action.return_to_origin()
+  )
