@@ -32,7 +32,7 @@ Ext.define( 'Oghma.Ext.Table',
   # Funcion to apply on next click to stage.
   dropper: null
 
-  # The underlying keymap for keyboard bindings.  Use {#bind} instead.
+  # The underlying keymap for keyboard bindings.  Use {#addBinding} instead.
   keymap: null
 
   # Called when zoom level changes with zoom level.
