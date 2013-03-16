@@ -41,8 +41,10 @@ class OghmaServer < Sinatra::Base
   enable :threaded
   enable :run
   enable :dump_errors
-  enable :logging
-  use Rack::CommonLogger
+
+  # Uncomment for request logging.
+#  enable :logging
+#  use Rack::CommonLogger
 
   # Defines
   # /comet/connect
@@ -80,7 +82,8 @@ class OghmaServer < Sinatra::Base
   dictionary.on_subscribe = -> id, s { blue("DICT SUBSCRIBE [#{id}] #{s}") }
   dictionary.on_collision = -> s     { red("DICT COLLISION #{s}")          }
 
-  comet.enable_debug
+  # Uncomment for low level server->client logging.
+#  comet.enable_debug
   comet.client_timeout  = 20
   comet.receive_timeout = 10
 
