@@ -94,7 +94,8 @@ Ext.define( 'Oghma.Ext.Table',
   # @return [Oghma.App] this
   apply_dropper: ( x, y, e = null ) ->
     @dropper?( x, y, e )
-    @unload_dropper()
+    if ! e? || ! e.altKey
+      @unload_dropper()
     this
 
   # Add a binding.
