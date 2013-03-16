@@ -26,8 +26,19 @@ Oghma.bind_keys = ( O ) ->
 
   for k, sides of dice_map
     do ( sides ) ->
-      O.table.onKey( k, ( x, y, k, e ) ->
-        O.action.roll_die( sides, x, y, e.shiftKey )
+      O.table.addBinding(
+        key:  k
+        ctrl: false
+        handler: ( x, y, k, e ) ->
+          O.action.roll_die( sides, x, y, e.shiftKey )
+      )
+      O.keymap.addBinding(
+        key:  k
+        ctrl: true
+        handler: ->
+          O.table.load_dropper( ( x, y, e ) ->
+            O.action.roll_die( sides, x, y, e.shiftKey )
+          )
       )
 
   # +
