@@ -1,6 +1,6 @@
-if RUBY_VERSION !~ /1.9/
-  puts "Ruby 1.9 required"
-  puts "If you have ruby 1.9 installed, try rake1.9 or rake19."
+if RUBY_VERSION !~ /1.9/ && RUBY_VERSION !~ /2.0/
+  puts "Ruby 1.9 or 2.0 required"
+  puts "If you have ruby 1.9/2.0 installed, try rake1.9 or rake19 (rake2.0 or rake20)."
   exit 1
 end
 
