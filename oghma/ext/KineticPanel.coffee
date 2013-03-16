@@ -27,19 +27,22 @@ Ext.define( 'Oghma.Ext.KineticPanel',
   # If true, stage will automatically resize to match panel.
   autoResizeStage: true
 
+  # Initialize stage.  Called at boxready.
+  initStage: ( width, height ) ->
+    @stage = new Kinetic.Stage(
+      container: @body
+      width:     width
+      height:    height
+    )
+
   # See ExtJS.
   initComponent: ->
     @on( 'boxready', ( it, width, height ) =>
-      @stage = new Kinetic.Stage(
-        container: @body
-        width:     width
-        height:    height
-      )
+      @initStage( width, height )
 
       @on( 'resize', =>
         if @autoResizeStage
-          @stage.setHeight( @getHeight() )
-          @stage.setWidth(  @getWidth() )
+          @stage.setSize( @getWidth(), @getHeight() )
       )
     )
     @callParent( arguments )
