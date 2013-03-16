@@ -54,9 +54,6 @@ class Oghma.App
   # Viewport
   viewport: null
 
-  # {Oghma.Ext.Kinetic} Panel.
-  kinetic_panel: null
-
   # Synonym for `kinetic_panel.stage`.
   stage: null
 
