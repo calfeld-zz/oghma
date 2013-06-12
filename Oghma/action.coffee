@@ -16,7 +16,7 @@ Oghma = @Oghma ?= {}
 
 # Oghma Action Environment
 #
-# This class will be extended by code in action/.  It provides "actions",
+# This class will be extended by code in action.  It provides "actions",
 # code that modifies the table, with this class serving as a holding location
 # and environment.
 #
