@@ -180,6 +180,20 @@ class Oghma.App
     )
     @viewport.add( @toolbar_main )
 
+    @on( 'post_login', ( me ) =>
+      if me.gets( 'name' ) == @GM
+        @toolbar_gm = Ext.create( 'Ext.toolbar.Toolbar',
+          region: 'north'
+          items: [
+            {
+              text: 'Debug'
+              menu: Oghma.Menu.debug( this )
+            }
+          ]
+        )
+        @viewport.add( @toolbar_gm )
+    )
+
     @verbose( 'Oghma is connecting...' )
 
     # Connect
