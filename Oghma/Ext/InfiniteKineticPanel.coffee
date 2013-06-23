@@ -165,4 +165,14 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   tY: ( y ) ->
     @t( [ 0, y ] )[1]
 
+  # Mouse position in table coordinates.
+  mouse: ->
+    pos = @stage.getMousePosition()
+    if pos?
+      z = @getZoom()
+      offset = @stage.getOffset()
+      [ ( pos.x / z + offset.x ), ( pos.y / z + offset.y ) ]
+    else
+      [ null, null ]
+
 )

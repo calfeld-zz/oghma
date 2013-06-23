@@ -50,14 +50,6 @@ Ext.define( 'Oghma.Ext.Table',
 
     null
 
-  # Mouse position in table coordinates.
-  mouse: ->
-    pos = @stage.getMousePosition()
-    if pos?
-      @t( [ pos.x , pos.y ] )
-    else
-      [ null, null ]
-
   # Load a function into the dropper.
   #
   # @param [function(x, y, event)] Event to load.
