@@ -16,4 +16,4 @@ Oghma = @Oghma ?= {}
 
 Oghma.Action.prototype.return_to_origin =
   ->
-    @O.table.centerStage( 0, 0 )
+    @O.table.setCenter( 0, 0 )

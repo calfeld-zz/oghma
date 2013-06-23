@@ -35,16 +35,13 @@ Ext.define( 'Oghma.Ext.Table',
   # The underlying keymap for keyboard bindings.  Use {#addBinding} instead.
   keymap: null
 
-  # Called when zoom level changes with zoom level.
-  onZoom: null
-
   # See ExtJS.
   initComponent: ->
     @callParent( arguments )
 
     @on( 'afterrender', =>
       @getEl().on( 'click', ( e ) =>
-        @apply_dropper( @tX( e.getX() ), @tY( e.getY() ), e )
+        @apply_dropper( @t( [ e.getX(), e.getY() ] )..., e )
         null
       )
     )
@@ -57,17 +54,9 @@ Ext.define( 'Oghma.Ext.Table',
   mouse: ->
     pos = @stage.getMousePosition()
     if pos?
-      [ @tX( pos.x ), @tY( pos.y ) ]
+      @t( [ pos.x , pos.y ] )
     else
       [ null, null ]
-
-  # Convert client X to table X:
-  tX: ( x ) ->
-    ( x - @getEl().getX() ) / @getZoom()
-
-  # Convert client X to table X:
-  tY: ( y ) ->
-    ( y - @getEl().getY() ) / @getZoom()
 
   # Load a function into the dropper.
   #

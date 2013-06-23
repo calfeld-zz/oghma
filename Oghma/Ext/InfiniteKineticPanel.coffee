@@ -30,6 +30,9 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   # How many ms after scrolling ends to recenter.
   recenterDelay: 500
 
+  # Called when zoom level changes with zoom level.
+  onZoom: null
+
   # See ExtJS.
   initComponent: ->
     Ext.apply( this,
@@ -38,7 +41,7 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
     )
     recenter = =>
       clearTimeout( @_timeout ) if @_timeout?
-      @centerStage( @getCenter()... )
+      @setCenter( @getCenter()... )
 
     @on( 'boxready', ( it, width, height ) =>
       @on( 'resize', ( it, width, height ) =>
@@ -68,14 +71,15 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   # See KineticPanel#initStage
   initStage: ( width, height )->
     @callParent( [ width * @stageSizeMultiplier, height * @stageSizeMultiplier ] )
-    @centerStage( 0, 0 )
+    return_to_origin = => @setCenter( 0, 0 )
+    setTimeout( return_to_origin, 0 )
 
   # Centers the stage on the specified coordinate.
   #
   # @param [float] x Stage x coordinate to center on.
   # @param [float] y Stage y coordinate to center on.
   # @return [Oghma.Ext.InfiniteKineticPanel] this
-  centerStage: ( x, y ) ->
+  setCenter: ( x, y ) ->
     scale = @stage.getScale()
     size = @getSize()
     stage_width = @stageSizeMultiplier * size.width
@@ -129,7 +133,7 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   setZoom: ( zoom ) ->
     center = @getCenter()
     @stage.setScale( zoom, zoom )
-    @centerStage( center... )
+    @setCenter( center... )
     @onZoom?( zoom )
 
   # Get zoom level.
@@ -137,5 +141,28 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   # @return [Float] Current zoom level.
   getZoom: ->
     @stage.getScale().x
+
+  # Translate a point from screen coordinates to stage coordinates.
+  #
+  # @param [Array<Float, Float>] pt Location in screen coordinates.
+  # @return [Array<Float, Float>] Location in stage coordinates.
+  t: ( pt ) ->
+    offset = @stage.getOffset()
+    ex = @getEl().getX()
+    ey = @getEl().getY()
+    z = @getZoom()
+    scroll = @body.getScroll()
+    [
+      ( pt[0] + scroll.left - ex ) / z + offset.x,
+      ( pt[1] + scroll.top  - ey ) / z + offset.y
+    ]
+
+  # Convert client X to table X:
+  tX: ( x ) ->
+    @t( [ x, 0 ] )[0]
+
+  # Convert client X to table X:
+  tY: ( y ) ->
+    @t( [ 0, y ] )[1]
 
 )
