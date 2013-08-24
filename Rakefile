@@ -28,8 +28,8 @@ COFFEE = 'coffee'
 
 EXTERNALS = [
   [ "http://coffeescript.org/extras/coffee-script.js", "coffee-script.js" ],
-  [ "http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.3.3.js", "kinetic.js" ],
-  [ "http://code.jquery.com/jquery-1.9.1.js", "jquery.js" ]
+  [ "http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.6.0.js", "kinetic.js" ],
+  [ "http://code.jquery.com/jquery-2.0.3.js", "jquery.js" ]
 ]
 
 # Helpers
