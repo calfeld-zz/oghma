@@ -34,9 +34,10 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
   thingyverse.define(
     'user',
     [ 'name' ],
-    colors: [ 'primary', 'secondary' ]
-    window: [ 'window' ]
-    table:  [ 'zoom' ]
+    colors:    [ 'primary', 'secondary' ]
+    window:    [ 'window' ]
+    table:     [ 'zoom' ]
+    ui_colors: [ 'ui_colors' ]
     ( attrs ) ->
       @__ =
         name:      attrs.name      ? 'Guest'
@@ -47,6 +48,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
             visible:  true
             box:      Oghma.Ext.Console.defaultBox
         zoom:      attrs.zoom ? O.table.defaultZoom
+        ui_colors: attrs.ui_colors ? O.ui_colors.value().name
       @__managed_windows =
          console: null
       @__update_guard = false
@@ -59,6 +61,13 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
       )
 
       O.table.setZoom( @__.zoom )
+
+      # Note: Only does something if different than current.
+      for v, i in O.ui_colors.values()
+        if v.Name == @__.ui_colors
+          O.ui_colors.set_index( i )
+          break
+      O.ui_colors.on_set( ( v ) => @set( ui_colors: v.name ) )
 
       update_info = ( which ) =>
         return if @__update_guard
@@ -107,11 +116,15 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
             thingyverse.user.add( thingy )
           else
             thingy.__[k] = v
+          # TODO: Consider having remote window changes not reflected here,
+          # just in new clients ala UI colors.
           if k == 'window'
             for which of thingy.__managed_windows
               update_window( which, true )
           if k == 'zoom' && ! local_data
             O.table.setZoom( v )
+          # ui_colors: Other connections won't change this sessions UI colors
+          # just those of the next opened session.
 
         null
 

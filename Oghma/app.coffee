@@ -70,6 +70,23 @@ class Oghma.App
   # GM Username
   GM: 'GM'
 
+  # UI Color
+  ui_colors: new Heron.Enumeration(
+    cycle: true
+    values: [
+      {
+        name:      'Light'
+        primary:   'lightblue'
+        secondary: 'lightgreen'
+      },
+      {
+        name:      'Dark'
+        primary:   'darkblue'
+        secondary: 'darkgreen'
+      }
+    ]
+  )
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -192,6 +209,22 @@ class Oghma.App
           ]
         )
         @viewport.add( @toolbar_gm )
+    )
+
+    # Status bar
+    @statusbar = Ext.create( 'Ext.toolbar.Toolbar',
+      region: 'south'
+      items: [
+        {
+          id: 'ui_colors'
+          text: "UI: #{@ui_colors.value().name}"
+          menu: Oghma.Status.ui_colors( this )
+        }
+      ]
+    )
+    @viewport.add( @statusbar )
+    @ui_colors.on_set( ( value ) =>
+      @statusbar.child( '#ui_colors' ).setText( "UI: #{value.name}" )
     )
 
     @verbose( 'Oghma is connecting...' )
