@@ -25,6 +25,7 @@ end
 <% end %>
 
   <script type='text/coffeescript'>
+    Ext.Loader.setPath( 'Ext.Oghma', './oghma/ext' )
     Ext.onReady( ->
       @O = new Oghma.App(debug: true)
     )
