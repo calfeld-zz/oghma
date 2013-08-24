@@ -18,10 +18,10 @@ path_compare = lambda do |a,b|
 end
 %>
 <% Dir.glob("#{HOME}/public/heron/**/*.js").sort(&path_compare).each do |js| %>
-  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
+  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>?r=<%= rand(100000) %>'></script>
 <% end %>
 <% Dir.glob("#{HOME}/public/oghma/**/*.js").sort(&path_compare).each do |js| %>
-  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>'></script>
+  <script type='application/javascript' src='<%= js.gsub("#{HOME}/public", "")%>?r=<%= rand(100000) %>'></script>
 <% end %>
 
   <script type='text/coffeescript'>
