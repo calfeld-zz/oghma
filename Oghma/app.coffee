@@ -187,10 +187,6 @@ class Oghma.App
           menu: Oghma.Menu.clear( this )
         },
         {
-          text: 'View'
-          menu: Oghma.Menu.view( this )
-        },
-        {
           text: 'Window'
           menu: Oghma.Menu.window( this )
         }
@@ -213,19 +209,43 @@ class Oghma.App
     )
 
     # Status bar
+    zoom_to_text = ( zoom ) -> Math.floor( zoom * 100 ) + '%'
     @statusbar = Ext.create( 'Ext.toolbar.Toolbar',
       region: 'south'
       items: [
         {
-          id: 'ui_colors'
+          id: 'status_ui_colors'
           text: "UI: #{@ui_colors.value().name}"
           menu: Oghma.Status.ui_colors( this )
+        },
+        {
+          id: 'status_zoom'
+          text: "Zoom: #{zoom_to_text(@table.getZoom())}"
+          menu: Oghma.Status.zoom( this )
+        },
+        {
+          id: 'status_location'
+          text: "@0,0"
+          handler: ->
+            O.action.return_to_origin()
         }
       ]
     )
     @viewport.add( @statusbar )
     @ui_colors.on_set( ( value ) =>
-      @statusbar.child( '#ui_colors' ).setText( "UI: #{value.name}" )
+      @statusbar.child( '#status_ui_colors' ).setText( "UI: #{value.name}" )
+    )
+    @table.onZoom.add( ( zoom ) =>
+      @statusbar.child( '#status_zoom' ).setText( "Zoom: #{zoom_to_text(zoom)}" )
+    )
+    status_location = @statusbar.child( '#status_location' )
+    Ext.getDoc().on(
+      mousemove: =>
+        [ x, y ] = @table.mouse()
+        if ! x?
+          status_location.setText( "@???" )
+        else
+          status_location.setText( "@#{x},#{y}" )
     )
 
     @verbose( 'Oghma is connecting...' )
