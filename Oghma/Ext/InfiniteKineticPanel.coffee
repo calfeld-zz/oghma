@@ -31,7 +31,7 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   recenterDelay: 500
 
   # Called when zoom level changes with zoom level.
-  onZoom: null
+  onZoom: jQuery.Callbacks()
 
   # See ExtJS.
   initComponent: ->
@@ -134,7 +134,7 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
     center = @getCenter()
     @stage.setScale( zoom, zoom )
     @setCenter( center... )
-    @onZoom?( zoom )
+    @onZoom.fire( zoom )
 
   # Get zoom level.
   #

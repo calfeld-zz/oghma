@@ -160,8 +160,9 @@ class Oghma.App
     )
     @table = Ext.create( 'Oghma.Ext.Table',
       region: 'center'
-      onZoom: ( zoom ) => @me()?.set( zoom: zoom )
     )
+    @table.onZoom.add( ( zoom ) => @me()?.set( zoom: zoom ) )
+
     @viewport.add( @table )
     @stage = @table.stage
     @layer.dice = new Kinetic.Layer()
