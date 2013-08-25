@@ -15,7 +15,7 @@
 Oghma = @Oghma ?= {}
 Oghma.Status ?= {}
 
-# dice menu.
+# UI Colors status.
 #
 # @param [Oghma.App] App.
 # @return [Oghma.Ext.EnumerationMenu] UI Colors Status menu.
