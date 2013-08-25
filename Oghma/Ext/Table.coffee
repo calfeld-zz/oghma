@@ -41,6 +41,7 @@ Ext.define( 'Oghma.Ext.Table',
 
     @on( 'afterrender', =>
       @getEl().on( 'click', ( e ) =>
+        O.reset_focus()
         @apply_dropper( @t( [ e.getX(), e.getY() ] )..., e )
         null
       )

@@ -94,6 +94,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
           ext.hide()
         ext.setPosition( box[0], box[1] )
         ext.setSize( box[2], box[3] )
+        O.reset_focus()
         @__update_guard = false
         if ! guard
           update_info()

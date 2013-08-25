@@ -416,3 +416,9 @@ class Oghma.App
     else
       color = user.gets( 'primary' )
       @console?.message( from, msg, color, color )
+
+  # Reset focus.
+  reset_focus: ->
+    Ext.get( Ext.Element.getActiveElement() ).blur()
+
+
