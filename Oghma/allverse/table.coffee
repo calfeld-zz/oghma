@@ -15,48 +15,48 @@
 Oghma = @Oghma ?= {}
 Oghma.Thingy ?= {}
 
-# userverse: login
+# allverse: table
 #
-# The login  thingy is a plain data thingy that holds the user specific
-# information.  It works closely with {Oghma.Login} which it assumes is held
-# at `O.login`.
+# A table is a virtual tabletop, populated with Tableverse thingies.  Each
+# login is in a single table and may move between tables at will.  A table
+# may be visible to everyone (empty `visible_to`) or to only a subset of
+# users (e.g., GM only).
 #
 # Attributes:
-# - name      [string] Name of user.
-# - client_id [string] Client ID.
+# - name       [string]        Name of table.
+# - visible_to [array<string>] Users table is visible to.  Empty list means
+#   all.
 #
 # Indices:
 # - name
-# - client_id
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
-Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
-  thingyverse.login = new Heron.Index.MapIndex( 'name', 'client_id' )
+Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
+  thingyverse.table= new Heron.Index.MapIndex( 'name' )
 
   thingyverse.define(
-    'login',
-    [ 'name', 'client_id' ],
+    'table',
+    [ 'name', 'visible_to' ],
     {},
     ( attrs ) ->
       @__ =
-        name:      attrs.name      ? throw 'name required.'
-        client_id: attrs.client_id ? throw 'client_id required.'
+        name:       attrs.name      ? throw 'name required.'
+        visible_to: attrs.visible_to ? []
 
       @after_construction( =>
-        thingyverse.login.add( this )
-        O.login?._.login_create( this )
+        thingyverse.table.add( this )
       )
 
       set: (thingy, attrs) ->
-        throw 'login thingies are immutable.'
+        for k, v of attrs
+          thingy.__[k] = v
         null
 
       get: ( thingy, keys... ) ->
         thingy.__
 
       remove: ( thingy ) ->
-        O.login?._.login_remove( thingy )
         thingyverse.login.remove( thingy )
         null
   )

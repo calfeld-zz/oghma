@@ -15,7 +15,7 @@
 Oghma = @Oghma ?= {}
 Oghma.Thingy ?= {}
 
-# userverse: user
+# allverse: user
 #
 # The user thingy is a plain data thingy that holds the user specific
 # information.
@@ -24,11 +24,14 @@ Oghma.Thingy ?= {}
 # - name      [string] Name.
 # - primary   [string] Primary color.
 # - secondary [string] Secondary color.
+# - table     [string] Current table.
+# - zoom      [float]  Current zoom level.
+# - ui_colors [string] Current UI colors.
 #
 # Indices:
 # - name
 #
-Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
+Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
   thingyverse.user = new Heron.Index.MapIndex( 'name' )
 
   thingyverse.define(
@@ -36,7 +39,7 @@ Oghma.Thingy.Userverse.register( ( thingyverse, O ) ->
     [ 'name' ],
     colors:    [ 'primary', 'secondary' ]
     window:    [ 'window' ]
-    table:     [ 'zoom' ]
+    table:     [ 'table', 'zoom' ]
     ui_colors: [ 'ui_colors' ]
     ( attrs ) ->
       @__ =

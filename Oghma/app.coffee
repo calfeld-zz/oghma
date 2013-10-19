@@ -26,10 +26,6 @@ root = this
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 class Oghma.App
-  # Callbacks
-  callbacks:
-    post_login: jQuery.Callbacks()
-
   # {Oghma.Ext.Console} window.
   console: null
 
@@ -87,6 +83,12 @@ class Oghma.App
     ]
   )
 
+  # Default table.
+  default_table: 'Antechamber'
+
+  # Current table, a table thingy.
+  current_table: null
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -111,6 +113,9 @@ class Oghma.App
 
     @_ = {}
     @_.debug = config.debug ? false
+    @_.callbacks =
+      post_login: jQuery.Callbacks()
+      join_table: jQuery.Callbacks()
 
     Ext.getBody().mask( 'Initialising...' )
 
@@ -132,13 +137,27 @@ class Oghma.App
     )
 
     # Thingyverses
+    @allverse = new Heron.Thingyverse()
+    Oghma.Thingy.Allverse.generate( @allverse, this )
+
     @userverse = new Heron.Thingyverse()
     Oghma.Thingy.Userverse.generate( @userverse, this )
 
-    @tableverse = new Heron.Thingyverse( ready: false )
+    @tableverse = new Heron.Thingyverse()
     Oghma.Thingy.Tableverse.generate( @tableverse, this )
     @on( 'post_login', ( me ) =>
-      @tableverse.ready()
+      @userverse.connect(
+        @dictionary,
+        'oghma.thingy.user.' + me.gets( 'name' )
+      )
+      initial_table = me.gets( 'table' )
+
+      if ! initial_table?
+        if ! @allverse.table.with_name( @default_table )[0]?
+          @allverse.create( 'table', name: @default_table )
+        initial_table = @default_table
+
+      @join_table( initial_table )
     )
 
     # Console
@@ -264,7 +283,7 @@ class Oghma.App
     @login.on( 'login', ( username ) => @message( username, 'Logged In' ) )
     @login.on( 'logout', ( username ) => @message( username, 'Logged Out' ) )
 
-    @userverse.connect( @dictionary, 'oghma.thingy.user', =>
+    @allverse.connect( @dictionary, 'oghma.thingy.all', =>
       # Check for ?user parameter.
       result = /^\?user=([^?]+)/.exec( window.location.search )
       if result?
@@ -304,7 +323,6 @@ class Oghma.App
         login.show()
       Ext.getBody().unmask()
     )
-    @tableverse.connect( @dictionary, 'oghma.thingy.table' )
     null
 
   # Login as user.
@@ -312,7 +330,7 @@ class Oghma.App
   # @param [string] username User to login as.
   # @return [Oghma.App] this
   login_user: ( username ) ->
-    @userverse.create( 'login',
+    @allverse.create( 'login',
       name:      username
       client_id: @client_id
     )
@@ -321,28 +339,29 @@ class Oghma.App
       document.title,
       encodeURI( "?user=#{username}" )
     )
-    @callbacks.post_login.fire( @me() )
+    @_.callbacks.post_login.fire( @me() )
     this
 
   # Register callback.
   #
   # Available events:
   # - post_login: Called with user thingy on successful login.
+  # - join_table: Called with table name and thingy on table join.
   #
   # @param [string] which Which event.
   # @param [function] f Function to call on specified event.
   # @return [Oghma.App] this
   on: ( which, f ) ->
-    @callbacks[ which ].add( f )
+    @_.callbacks[ which ].add( f )
     this
 
   # @return [userverse.user] Thingy for current user.
   me: ->
-    logins = @userverse.login.with_client_id( @client_id )
+    logins = @allverse.login.with_client_id( @client_id )
     if logins? && logins.length > 0
       username = logins[0].gets( 'name' )
       if username?
-        return @userverse.user.with_name( username )?[0]
+        return @allverse.user.with_name( username )?[0]
     null
 
   # @param [Heron.Map] item Item to check ownership.
@@ -360,12 +379,12 @@ class Oghma.App
   # @option userinfo [string] secondary Seconary color.
   # @return [null] null
   create_user: ( userinfo ) ->
-    if @userverse.user.with_name( userinfo.name ).length > 0
+    if @allverse.user.with_name( userinfo.name ).length > 0
       # TODO: Do something better with errors.
       alert( "User #{userinfo.name} already exists." )
       false
     else
-      @userverse.create( 'user', userinfo )
+      @allverse.create( 'user', userinfo )
       true
 
   # Send verbose message to the console.
@@ -404,13 +423,13 @@ class Oghma.App
     console.debug( msg )
     this
 
-  # Send a message from a user to the console
+  # Send a message from a user to the console.
   #
   # @param [string] username Name of user.
   # @param [string] message Message.
   # @return [Oghma.App] this
   message: ( from, msg ) ->
-    user = @userverse.user.with_name( from )[0]
+    user = @allverse.user.with_name( from )[0]
     if ! user?
       @error( "Message from non-existent user #{from}: #{msg}" )
     else
@@ -421,4 +440,27 @@ class Oghma.App
   reset_focus: ->
     Ext.get( Ext.Element.getActiveElement() ).blur()
 
+  # Join a table.
+  #
+  # @param [string] which Name of which table to join.
+  # @return [Oghma.App] this
+  join_table: ( which ) ->
+    @verbose( "Joining table: #{which}" )
+    table = @allverse.table.with_name( which )[0]
+    if ! table?
+      error( "Attempt to join non-existent table: #{which}" )
+      return
+
+    if @tableverse.domain()?
+      @tableverse.disconnect()
+    @current_table = table
+    @tableverse.connect(
+      @dictionary,
+      'oghma.thingy.table.' + which,
+      =>
+        @verbose( "Joined table: #{which}" )
+        @_.callbacks.join_table.fire( which, table )
+    )
+
+    this
 

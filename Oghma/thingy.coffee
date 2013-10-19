@@ -25,14 +25,17 @@ Oghma.Thingy ?= {}
 # This class is not intended for use outside of this file which also defines
 # the Oghma.Thingy.* primordial thingyverses.  Those currently are:
 #
-# - Oghma.Thingy.Userverse: All userverse thingies will be instantiated before
-#   tableverse thingies and before login (i.e., before there is a current
-#   user).  As such, they should operate with minimal context, e.g., be plain
-#   data.
-# - Oghma.Thingy.Tableverse: All tableverse thingies will not be instantiated
-#   until all userverse thingies are and until a successful login has
-#   occurred.  As such, they can require user data to be available and a
-#   current user to be set.
+# - Oghma.Thingy.Allverse: A single thingyverse that holds thingies that must
+#   always be able such as userinfo and tableinfo.  This thingyverse is
+#   connected to immediately upon load.  No thingy in it can depend on the
+#   current user.
+# - Oghma.Thingy.Tableverse: A per-table thingyverse that holds thingies that
+#   represent table objects such as dice, rulers, and avatars.  A tableverse
+#   is connected to after login and the user is free to switch to another
+#   tableverse at any time.
+# - Oghma.Thingy.Userverse: A per-user thingyverse that holds thingies that
+#   only a particular user needs such as avatar-templates.  The appropriate
+#   userverse is connected to after login and never changed.
 #
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
@@ -60,6 +63,8 @@ class Oghma.PrimordialThingyverse
     g( thingyverse, O ) for g in @_.generators
     this
 
+# See {Oghma.PrimordialThingyverse}
+Oghma.Thingy.Allverse  = new Oghma.PrimordialThingyverse()
 # See {Oghma.PrimordialThingyverse}
 Oghma.Thingy.Userverse  = new Oghma.PrimordialThingyverse()
 # See {Oghma.PrimordialThingyverse}
