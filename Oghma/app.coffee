@@ -450,7 +450,6 @@ class Oghma.App
   # @param [string] which Name of which table to join.
   # @return [Oghma.App] this
   join_table: ( which ) ->
-    @verbose( "Joining table: #{which}" )
     table = @allverse.table.with_name( which )[0]
     if ! table?
       error( "Attempt to join non-existent table: #{which}" )
