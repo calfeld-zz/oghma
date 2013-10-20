@@ -93,7 +93,7 @@ class Oghma.App
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
   # initializes the thingyverses from the primordial thingyverses.  Once the
-  # userverse is loaded, displays the login screen.
+  # allverse is loaded, displays the login screen.
   #
   # @param [object] config Configuration.
   # @option config [boolean] debug If true, additional information is sent to
@@ -105,6 +105,7 @@ class Oghma.App
   # - dictionary [{Heron.Dictionary}]
   # - comet [{Heron.Comet}]
   # - userverse [{Heron.Thingyverse}]
+  # - allverse [{Heron.Thingyverse}]
   # - tableverse [{Heron.Thingyverse}]
   #
   constructor: (config = {}) ->
@@ -360,7 +361,7 @@ class Oghma.App
     @_.callbacks[ which ].add( f )
     this
 
-  # @return [userverse.user] Thingy for current user.
+  # @return [allverse.user] Thingy for current user.
   me: ->
     logins = @allverse.login.with_client_id( @client_id )
     if logins? && logins.length > 0
