@@ -462,6 +462,9 @@ class Oghma.App
       @dictionary,
       'oghma.thingy.table.' + which,
       =>
+        me = @me()
+        if me.gets( 'table' ) != which
+          me.set( table: which )
         @verbose( "Joined table: #{which}" )
         @_.callbacks.join_table.fire( which, table )
     )
