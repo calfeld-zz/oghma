@@ -57,7 +57,7 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
         thingy.__
 
       remove: ( thingy ) ->
-        thingyverse.login.remove( thingy )
+        thingyverse.table.remove( thingy )
         null
   )
 )
