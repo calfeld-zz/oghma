@@ -52,6 +52,7 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
             box:      Oghma.Ext.Console.defaultBox
         zoom:      attrs.zoom ? O.table.defaultZoom
         ui_colors: attrs.ui_colors ? O.ui_colors.value().name
+        table:     attrs.table
       @__managed_windows =
          console: null
       @__update_guard = false
