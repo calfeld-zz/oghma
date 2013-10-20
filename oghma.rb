@@ -121,6 +121,18 @@ class OghmaServer < Sinatra::Base
     list_resources(params) {|path| File.directory?(path)}
   end
 
+  get '/remove_table' do
+    table = params[ 'table' ]
+
+    raise "Missing table." if ! table
+    raise "Invalid table." if table !~ /^[\w\s.]+$/
+    path = File.join( DICTIONARY_DB, "oghma.thingy.table.#{table}.db" )
+    if ! File.exists?( path )
+      raise "Table does not exist: #{table}"
+    end
+    File.unlink( path )
+  end
+
   at_exit { dictionary.shutdown }
 
   run!
