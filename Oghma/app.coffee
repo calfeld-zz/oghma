@@ -273,6 +273,10 @@ class Oghma.App
     # Connect
     @comet.connect()
 
+  # Check if current user is GM.
+  isGM: ->
+    @me().gets( 'name' ) == @GM
+
   # Login Phase.
   #
   # Display Login window.  Also handles user creation logic.
