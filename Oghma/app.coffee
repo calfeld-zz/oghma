@@ -249,6 +249,11 @@ class Oghma.App
           width: 100
           handler: ->
             O.action.return_to_origin()
+        },
+        {
+          id: 'status_table'
+          text: "N/A"
+          menu: Oghma.Status.table( this )
         }
       ]
     )
@@ -267,6 +272,9 @@ class Oghma.App
           status_location.setText( "@???" )
         else
           status_location.setText( "@#{x},#{y}" )
+    )
+    @on( 'join_table', ( which ) =>
+      @statusbar.child( '#status_table' ).setText( "Table: #{which}" )
     )
 
     @verbose( 'Oghma is connecting...' )
