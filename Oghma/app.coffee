@@ -245,6 +245,7 @@ class Oghma.App
         {
           id: 'status_location'
           text: "@0,0"
+          width: 100
           handler: ->
             O.action.return_to_origin()
         }
