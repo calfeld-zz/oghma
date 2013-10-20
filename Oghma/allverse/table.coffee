@@ -56,8 +56,15 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
       get: ( thingy, keys... ) ->
         thingy.__
 
-      remove: ( thingy ) ->
+      unload: ( thingy ) ->
         thingyverse.table.remove( thingy )
+        null
+
+      remove: ( thingy, local_data ) ->
+        @unload( thingy )
+        if local_data
+          # Fire and forget for now.  Eventually could check.
+          jQuery.get( "/remove_table", table: thingy.gets( 'name' ) )
         null
   )
 )
