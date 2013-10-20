@@ -24,7 +24,8 @@ Oghma.Thingy ?= {}
 # - name      [string] Name.
 # - primary   [string] Primary color.
 # - secondary [string] Secondary color.
-# - table     [string] Current table.
+# - table     [string] Table to join at login; will only match curren table
+#   being viewed if there is a unique login.
 # - zoom      [float]  Current zoom level.
 # - ui_colors [string] Current UI colors.
 #
