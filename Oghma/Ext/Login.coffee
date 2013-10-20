@@ -38,7 +38,7 @@ Ext.define( 'Oghma.Ext.Login',
     throw 'onCreate required.' if ! @onCreate
     throw 'O required.' if ! @O
 
-    users = @O.userverse.user.each_name()
+    users = @O.allverse.user.each_name()
 
     form = Ext.create( 'Ext.form.Panel',
       layout: 'anchor'
