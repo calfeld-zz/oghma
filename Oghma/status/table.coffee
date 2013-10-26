@@ -34,7 +34,7 @@ Oghma.Status.table = ( O ) ->
       O.join_table( O.default_table )
       table.remove()
   pull_to = ( table ) ->
-    # XXX -- need mechanism for pulling all users to a table.
+    alert("Not yet implemented.")
 
   make_gm_only = ( table ) ->
     table.set( visible_to: [ O.GM ] )
