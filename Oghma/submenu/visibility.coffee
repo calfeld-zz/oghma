@@ -38,7 +38,7 @@ Oghma.SubMenu.visibility = ( O, thingy, key = 'visible_to' ) ->
 
   if value.length == 0
     items.push(
-      text: 'Make private to me.'
+      text: 'Make private'
       handler: -> set( [ O.me().gets('name') ] )
     )
   else
