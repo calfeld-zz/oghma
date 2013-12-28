@@ -26,6 +26,8 @@ Oghma.Thingy ?= {}
 # - name       [string]        Name of table.
 # - visible_to [array<string>] Users table is visible to.  Empty list means
 #   all.
+# - grid       [float]         Width of grid square in Kinetic points.
+# - origin     [float, float]  Origin of grid in Kinetic coordinates.
 #
 # Indices:
 # - name
@@ -38,17 +40,33 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
   thingyverse.define(
     'table',
     [ 'name', 'visible_to' ],
-    {},
+    {
+      'grid': [ 'grid', 'origin' ]
+    },
     ( attrs ) ->
       @__ =
-        name:       attrs.name      ? throw 'name required.'
+        name:       attrs.name       ? throw 'name required.'
         visible_to: attrs.visible_to ? []
+        grid:       attrs.grid       ? 32
+        origin:     attrs.origin     ? [ 0, 0 ]
 
       @after_construction( =>
         thingyverse.table.add( this )
       )
 
-      set: (thingy, attrs) ->
+      # Grid distance to kinetic distance.
+      @g2k = ( d ) ->
+        d * @__.grid
+
+      # Grid vector to kinetic vector.
+      @vec_g2k = ( v ) ->
+        [ @g2k(v[0]) + @__.origin[0], @g2k(v[1]) + @__.origin[1] ]
+
+      # Origin in kinetic coordinates.
+      @origin_k = ->
+        @vec_g2k( [ 0, 0 ] )
+
+      set: ( thingy, attrs ) ->
         for k, v of attrs
           thingy.__[k] = v
         null
