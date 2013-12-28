@@ -36,14 +36,6 @@ Oghma.Status.table = ( O ) ->
   pull_to = ( table ) ->
     alert("Not yet implemented.")
 
-  make_gm_only = ( table ) ->
-    table.set( visible_to: [ O.GM ] )
-  make_public = ( table ) ->
-    table.set( visible_to: [] )
-  make_visible_to = ( table, who ) ->
-    table.set(
-      visible_to: table.gets( 'visible_to' ).concat( [ who ] )
-    )
   who = ( table ) ->
     visible_to = table.gets( 'visible_to' )
     if visible_to.length == 0
@@ -78,27 +70,8 @@ Oghma.Status.table = ( O ) ->
             )
           )
           @add( '-' )
-          if O.current_table.gets( 'visible_to' ).length == 0
-            @add(
-              text: "Make #{current} #{O.GM} only"
-              handler: -> make_gm_only( current_table )
-            )
-          else
-            @add(
-              text: "Make #{current} public"
-              handler: -> make_public( current_table )
-            )
-            @add(
-              Ext.create('Ext.form.field.Text',
-                fieldLabel: 'Make visible to '
-                listeners:
-                  specialkey: ( field, e ) =>
-                    if e.getKey() == e.ENTER
-                      name = field.getValue()
-                      make_visible_to( current_table, name )
-                      @hide()
-              )
-            )
+          @add( Oghma.SubMenu.visibility( O, current_table ) )
+          @add( '-' )
           @add(
             text: "Pull to #{current}"
             handler: -> pull_to( current_table )
