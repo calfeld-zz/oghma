@@ -59,9 +59,13 @@ class Oghma.App
   # Keymap for global keyboard shortcuts.
   keymap: null
 
+  # Order of layers
+  layer_order: [ 'avatars', 'dice' ]
+
   # Layers
   layer:
-    dice: null
+    dice:    null
+    avatars: null
 
   # GM Username
   GM: 'GM'
@@ -191,8 +195,10 @@ class Oghma.App
 
     @viewport.add( @table )
     @stage = @table.stage
-    @layer.dice = new Kinetic.Layer()
-    @stage.add( @layer.dice )
+
+    for layer_name in @layer_order
+      @layer[ layer_name ] = new Kinetic.Layer()
+      @stage.add( @layer[ layer_name ] )
 
     # Set up keymap
     @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getDoc() )
