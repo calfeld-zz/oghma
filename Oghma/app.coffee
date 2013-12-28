@@ -161,6 +161,12 @@ class Oghma.App
       @join_table( initial_table )
     )
 
+    # Allow right clicks to hit nodes.
+    window.oncontextmenu = ( event ) ->
+        event.preventDefault()
+        event.stopPropagation()
+        false
+
     # Console
     @console = Ext.create( 'Oghma.Ext.Console',
       x: 50
