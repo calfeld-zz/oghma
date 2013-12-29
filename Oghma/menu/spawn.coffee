@@ -24,6 +24,33 @@ Oghma.Menu ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Oghma.Menu.spawn = ( O ) ->
+  spawn_dialog = ->
+    dialog = Ext.create( 'Oghma.Ext.EditObject',
+      object:
+        name:      'Example'
+        index:     ''
+        size:      1
+        owner:     O.me().gets( 'name' )
+        group:     'undetermined'
+        category:  'undetermined'
+        fill:      O.me().gets( 'primary' )
+        stroke:    O.me().gets( 'secondary' )
+      types:
+        fill:   'color'
+        stroke: 'color'
+        index:  'string-blank'
+      title: 'Spawn Avatar'
+      onSave: ( avatarinfo ) =>
+        O.table.load_dropper( ( x, y, e) ->
+          avatarinfo.x = x
+          avatarinfo.y = y
+          O.tableverse.create( 'avatar', avatarinfo )
+        )
+        dialog.close()
+      onCancel: ->
+        dialog.close()
+    )
+
   calculate_index = ( name ) ->
     max_existing_index = 0
     O.tableverse.avatar.each( ( avatar ) ->
@@ -35,7 +62,7 @@ Oghma.Menu.spawn = ( O ) ->
     items: [
       {
         text: 'Spawn Example Avatar'
-        handler: ( item, e ) ->
+        handler: ->
           O.table.load_dropper( ( x, y, e ) ->
             O.tableverse.create( 'avatar',
               name: 'Example'
@@ -44,6 +71,11 @@ Oghma.Menu.spawn = ( O ) ->
               y: y
             )
           )
+      },
+      {
+        text: 'Spawn...'
+        handler: ->
+          spawn_dialog().show()
       }
     ]
   )
