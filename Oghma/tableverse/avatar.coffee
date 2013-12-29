@@ -69,8 +69,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         index:      attrs.index      ? ''
         group:      attrs.group      ? 'undetermined'
         category:   attrs.category   ? 'undetermined'
-        fill:       attrs.color1     ? O.me().gets( 'primary' )
-        stroke:     attrs.color2     ? O.me().gets( 'secondary' )
+        fill:       attrs.fill       ? O.me().gets( 'primary' )
+        stroke:     attrs.stroke     ? O.me().gets( 'secondary' )
         token:      attrs.token      ? ''
         visible_to: attrs.visible_to ? []
 
