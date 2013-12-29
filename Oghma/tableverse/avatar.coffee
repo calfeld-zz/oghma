@@ -83,7 +83,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
       @is_visible = =>
         @__.visible_to.length == 0 ||
-        @__.visible_to.indexOf( O.me().gets( 'name' ) ) != -1
+        @__.visible_to.indexOf( O.me().gets( 'name' ) ) != -1 ||
+        O.isGM()
 
       @show_label = =>
         if @is_visible() && @__k?
