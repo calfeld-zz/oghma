@@ -215,6 +215,10 @@ class Oghma.App
           menu: Oghma.Menu.dice( this )
         },
         {
+          text: 'Spawn'
+          menu: Oghma.Menu.spawn( this )
+        },
+        {
           text: 'Clear'
           menu: Oghma.Menu.clear( this )
         },
