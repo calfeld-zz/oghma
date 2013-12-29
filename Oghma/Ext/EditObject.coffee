@@ -31,6 +31,7 @@ Ext.define( 'Oghma.Ext.EditObject',
   # Supported types are:
   # - color
   # - string
+  # - string-blank
   # - auto
   types: {}
 
@@ -88,7 +89,7 @@ Ext.define( 'Oghma.Ext.EditObject',
         when 'color'
           field = Ext.create( 'Oghma.Ext.ColorField' )
         else
-          if type != 'auto' && type != 'string'
+          if type != 'auto' && type != 'string' && type != 'string-blank'
             throw "Unknown type: #{type}"
           else
             field = Ext.create( 'Ext.form.field.Text' )
@@ -97,7 +98,7 @@ Ext.define( 'Oghma.Ext.EditObject',
         fieldLabel: k
         labelStyle: 'text-transform: capitalize'
         name:       k
-        allowBlank: false
+        allowBlank: type == 'string-blank'
       )
       field.setValue( v )
 
