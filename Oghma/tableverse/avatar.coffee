@@ -128,6 +128,19 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
           @__k.add( @__kdisk )
           @__k.add( @__klabel )
 
+          if @__.token != ''
+            image = new Image()
+            image.onload = =>
+              @__ktoken = new Kinetic.Image(
+                image:   image
+                offsetX: @__.r
+                offsetY: @__.r
+                width:   2 * @__.r
+                height:  2 * @__.r
+              )
+              @__k.add(@__ktoken)
+            image.src = @__.token
+
           @__kdisk.on( 'click', ( e ) =>
             if e.which == 3 && ( @is_owned() || e.shiftKey )
               items = [

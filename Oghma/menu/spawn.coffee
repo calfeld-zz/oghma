@@ -35,10 +35,12 @@ Oghma.Menu.spawn = ( O ) ->
         category:  'undetermined'
         fill:      O.me().gets( 'primary' )
         stroke:    O.me().gets( 'secondary' )
+        token:     ''
       types:
         fill:   'color'
         stroke: 'color'
         index:  'string-blank'
+        token:  'string-blank'
       title: 'Spawn Avatar'
       onSave: ( avatarinfo ) =>
         O.table.load_dropper( ( x, y, e) ->
