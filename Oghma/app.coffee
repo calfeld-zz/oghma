@@ -477,7 +477,7 @@ class Oghma.App
   join_table: ( which ) ->
     table = @allverse.table.with_name( which )[0]
     if ! table?
-      error( "Attempt to join non-existent table: #{which}" )
+      @error( "Attempt to join non-existent table: #{which}" )
       return
 
     if @tableverse.domain()?
