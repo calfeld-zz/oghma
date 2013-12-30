@@ -47,6 +47,9 @@ class Oghma.App
   # {Oghma.Login} Manager.
   login: null
 
+  # {Oghma.Event} Manager
+  event: null
+
   # Viewport
   viewport: null
 
@@ -313,6 +316,8 @@ class Oghma.App
     @login.on( 'login', ( username ) => @message( username, 'Logged In' ) )
     @login.on( 'logout', ( username ) => @message( username, 'Logged Out' ) )
 
+    # Create event Manager
+    @event = new Oghma.Event( this )
     @allverse.connect( @dictionary, 'oghma.thingy.all', =>
       # Check for ?user parameter.
       result = /^\?user=([^?]+)/.exec( window.location.search )
