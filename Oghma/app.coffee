@@ -318,6 +318,12 @@ class Oghma.App
 
     # Create event Manager
     @event = new Oghma.Event( this )
+
+    # Watch for table pull events.
+    @event.on( 'table.pull', ( which, table, local ) =>
+      @join_table( table )
+    )
+
     @allverse.connect( @dictionary, 'oghma.thingy.all', =>
       # Check for ?user parameter.
       result = /^\?user=([^?]+)/.exec( window.location.search )

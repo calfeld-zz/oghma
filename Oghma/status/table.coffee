@@ -23,7 +23,6 @@ Oghma.Status ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
 Oghma.Status.table = ( O ) ->
-
   create_table = ( name ) ->
     O.allverse.create('table', name: name, visible_to: [ O.GM ])
     O.join_table( name )
@@ -34,7 +33,7 @@ Oghma.Status.table = ( O ) ->
       O.join_table( O.default_table )
       table.remove()
   pull_to = ( table ) ->
-    alert("Not yet implemented.")
+    O.event.fire( 'table.pull', table.gets( 'name' ) )
 
   who = ( table ) ->
     visible_to = table.gets( 'visible_to' )
