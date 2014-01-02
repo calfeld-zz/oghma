@@ -1,4 +1,4 @@
-# Copyright 2010-2013 Christopher Alfeld
+# Copyright 2010-2014 Christopher Alfeld
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,6 +41,16 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       avatar.hide_label()
     )
 
+  min_z = null
+  max_z = null
+  O.on( 'join_table', ->
+    # XXX Sort all avatars by z and then raise/lower appropriately.
+
+    # XXX set min_z and max_z
+  )
+  # XXX on create/raise set z to max_z+1 and increment max_z.
+  # XXX on lower set z to min_z-1 and decrement min_z.
+
   thingyverse.define(
     'avatar',
     [
@@ -73,6 +83,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         stroke:     attrs.stroke     ? O.me().gets( 'secondary' )
         token:      attrs.token      ? ''
         visible_to: attrs.visible_to ? []
+        id:         attrs.id         ? Heron.Util.generate_id()
 
       @after_construction( ->
         thingyverse.avatar.add( this )
@@ -139,6 +150,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
                 height:  2 * @__.r
               )
               @__k.add(@__ktoken)
+              draw_layer()
             image.src = @__.token
 
           @__kdisk.on( 'click', ( e ) =>
