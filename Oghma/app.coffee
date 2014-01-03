@@ -251,6 +251,18 @@ class Oghma.App
 
     # Status bar
     zoom_to_text = ( zoom ) -> Math.floor( zoom * 100 ) + '%'
+    @_.set_visibility_title = ( h, a ) =>
+      name = (
+        if a && h
+          'Show: All & Hidden'
+        else if a
+          'Show: All'
+        else if h
+          'Show: Hidden'
+        else
+          'Show: Normal'
+      )
+      @statusbar.child( '#status_visibility' ).setText( name )
     @statusbar = Ext.create( 'Ext.toolbar.Toolbar',
       region: 'south'
       items: [
@@ -275,6 +287,11 @@ class Oghma.App
           id: 'status_table'
           text: "N/A"
           menu: Oghma.Status.table( this )
+        },
+        {
+          id: 'status_visibility'
+          text: "N/A"
+          menu: Oghma.Status.visibility( this, @_.set_visibility_title )
         }
       ]
     )
@@ -284,6 +301,9 @@ class Oghma.App
     )
     @table.onZoom.add( ( zoom ) =>
       @statusbar.child( '#status_zoom' ).setText( "Zoom: #{zoom_to_text(zoom)}" )
+    )
+    @on( 'post_login', =>
+      @_.set_visibility_title( @me().geta( 'show_hidden', 'show_all' )... )
     )
     status_location = @statusbar.child( '#status_location' )
     Ext.getDoc().on(

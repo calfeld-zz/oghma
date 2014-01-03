@@ -38,22 +38,25 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
   thingyverse.define(
     'user',
     [ 'name' ],
-    colors:    [ 'primary', 'secondary' ]
-    window:    [ 'window' ]
-    table:     [ 'table', 'zoom' ]
-    ui_colors: [ 'ui_colors' ]
+    colors:     [ 'primary', 'secondary' ]
+    window:     [ 'window' ]
+    table:      [ 'table', 'zoom' ]
+    ui_colors:  [ 'ui_colors' ]
+    visibility: [ 'show_hidden', 'show_all' ]
     ( attrs ) ->
       @__ =
-        name:      attrs.name      ? 'Guest'
-        primary:   attrs.primary   ? 'orange'
-        secondary: attrs.secondary ? 'blue'
+        name:        attrs.name      ? 'Guest'
+        primary:     attrs.primary   ? 'orange'
+        secondary:   attrs.secondary ? 'blue'
         window:
           console:
-            visible:  true
-            box:      Oghma.Ext.Console.defaultBox
-        zoom:      attrs.zoom      ? O.table.defaultZoom
-        ui_colors: attrs.ui_colors ? O.ui_colors.value().name
-        table:     attrs.table     ? O.default_table
+            visible: true
+            box:     Oghma.Ext.Console.defaultBox
+        zoom:        attrs.zoom        ? O.table.defaultZoom
+        ui_colors:   attrs.ui_colors   ? O.ui_colors.value().name
+        table:       attrs.table       ? O.default_table
+        show_hidden: attrs.show_hidden ? false
+        show_all:    attrs.show_all    ? false
       @__managed_windows =
          console: null
       @__update_guard = false
