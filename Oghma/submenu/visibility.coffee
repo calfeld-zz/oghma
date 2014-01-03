@@ -47,16 +47,14 @@ Oghma.SubMenu.visibility = ( O, thingy, key = 'visible_to' ) ->
       handler: -> set( [] )
     )
 
-  O.allverse.user.each_name( ( name ) ->
-    items.push(
-      text: name
-      checked: value.indexOf( name ) != -1
-      handler: ->
-        i = value.indexOf( name )
-        if i != -1
-          value.splice( i, 1 )
-        else
+  items.push(
+    text: 'Visible to'
+    menu: Oghma.SubMenu.users( O, 'multi', value,
+      ( name, checked ) ->
+        if checked
           value.push( name )
+        else
+          value.splice( value.indexOf( name ), 1 )
         set( value )
     )
   )
