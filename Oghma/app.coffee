@@ -63,7 +63,7 @@ class Oghma.App
   keymap: null
 
   # Order of layers
-  layer_order: [ 'avatars', 'dice' ]
+  layer_order: [ 'annotations', 'avatars', 'dice' ]
 
   # Layers
   layer: {}
