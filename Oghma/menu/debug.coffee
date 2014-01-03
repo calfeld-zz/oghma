@@ -26,8 +26,12 @@ Oghma.Menu.debug = ( O ) ->
   menu = Ext.create( 'Oghma.Ext.Menu',
     items: [
       {
-        text: "Force Redraw"
+        text: "Force Stage Redraw"
         handler: -> O.stage.draw()
+      },
+      {
+        text: "Force Tableverse Redraw"
+        handler: -> O.redraw_tableverse()
       },
       {
         text: "Force ZIndex Recalculate"

@@ -491,6 +491,15 @@ class Oghma.App
       v.recalculate()
     @stage.draw()
 
+  # Have all tableverse thingies redraw themselves.
+  #
+  # @return [Oghma.App] this
+  redraw_tableverse: ->
+    @tableverse.each_thingy( ( thingy ) ->
+      thingy.redraw?( false )
+    )
+    @stage.draw()
+
   # Join a table.
   #
   # @param [string] which Name of which table to join.
