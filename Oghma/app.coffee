@@ -66,9 +66,10 @@ class Oghma.App
   layer_order: [ 'avatars', 'dice' ]
 
   # Layers
-  layer:
-    dice:    null
-    avatars: null
+  layer: {}
+
+  # ZIndices
+  zindex: {}
 
   # GM Username
   GM: 'GM'
@@ -201,6 +202,7 @@ class Oghma.App
 
     for layer_name in @layer_order
       @layer[ layer_name ] = new Kinetic.Layer()
+      @zindex[ layer_name ] = new Oghma.ZIndex()
       @stage.add( @layer[ layer_name ] )
 
     # Set up keymap
@@ -481,6 +483,14 @@ class Oghma.App
   reset_focus: ->
     Ext.get( Ext.Element.getActiveElement() ).blur()
 
+  # Have all zindices recalculate object layering.
+  #
+  # @return [Oghma.App] this
+  recalculate_zindices: ->
+    for k, v of @zindex
+      v.recalculate()
+    @stage.draw()
+
   # Join a table.
   #
   # @param [string] which Name of which table to join.
@@ -502,6 +512,7 @@ class Oghma.App
         if me.gets( 'table' ) != which
           me.set( table: which )
         @verbose( "Joined table: #{which}" )
+        @recalculate_zindices()
         @_.callbacks.join_table.fire( which, table )
     )
 

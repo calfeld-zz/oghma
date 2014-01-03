@@ -30,6 +30,10 @@ Oghma.Menu.debug = ( O ) ->
         handler: -> O.stage.draw()
       },
       {
+        text: "Force ZIndex Recalculate"
+        handler: -> O.recalculate_zindices()
+      },
+      {
         text:    "Display Origin"
         checked: false
         handler: ->
