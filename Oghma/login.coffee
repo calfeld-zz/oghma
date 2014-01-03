@@ -107,7 +107,6 @@ class Oghma.Login
     to_delete = []
     @_.O.allverse.login.each( ( thingy ) =>
       [ name, client_id ] = thingy.geta( 'name', 'client_id' )
-      console.debug( name, client_id, @is_client(client_id))
       if ! @is_client( client_id )
         to_delete.push( thingy )
     )
