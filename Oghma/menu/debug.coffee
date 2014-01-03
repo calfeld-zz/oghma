@@ -45,6 +45,11 @@ Oghma.Menu.debug = ( O ) ->
             O.action.show_origin_marker()
           else
             O.action.hide_origin_marker()
+      },
+      {
+        text: "Spawn Shape"
+        handler: ->
+          O.tableverse.create( 'shape' )
       }
     ]
   )
