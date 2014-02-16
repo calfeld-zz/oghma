@@ -120,7 +120,6 @@ class Oghma.KineticThingyDelegate
       @__kt.attrs[k] = v
     if new_zindex?
       @__kt.zindex.update( thingy )
-    console.debug( 'set', need_redraw, local_attrs.no_redraw?, @__kt.draw_attrs, attrs )
     if need_redraw && ! local_attrs.no_redraw?
       @redraw()
     this
