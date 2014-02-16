@@ -133,7 +133,7 @@ class Oghma.KineticThingyDelegate
   remove: ( thingy ) ->
     @group().destroy()
     @draw_layer()
-    @zindex().unregister( thingy )
+    @__kt.zindex.unregister( thingy )
 
   # Accessor methods.  Do not override.
 
@@ -151,7 +151,7 @@ class Oghma.KineticThingyDelegate
 
   # ZIndex
   # @return [Oghma.ZIndex] ZIndex participating in.
-  zinder: -> @__kt.zindex
+  zindex: -> @__kt.zindex
 
   # Thingy
   # @return [Oghma.Thingy] Thingy delegate for.
@@ -313,10 +313,6 @@ class Oghma.KineticThingyDelegate
   # True if locked.
   # @return [bool] True if locked.
   locked:       -> @__kt.thingy.gets( 'locked' )
-
-  # Sort index for layering.
-  # @return [integer] Sort index for layering.
-  zindex:       -> @__kt.thingy.gets( 'zindex' )
 
   default_thingy_methods = [
     'redraw',
