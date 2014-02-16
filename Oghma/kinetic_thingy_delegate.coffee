@@ -318,7 +318,8 @@ class Oghma.KineticThingyDelegate
     'redraw',
     'is_locked', 'is_public', 'is_visible', 'is_hidden', 'is_owned',
     'raise', 'lower',
-    'redraw'
+    'redraw',
+    'visibility'
   ]
 
   # Add common methods to thingy.
@@ -328,7 +329,8 @@ class Oghma.KineticThingyDelegate
   #
   # By default, the following methods are added to the thingy, each behaves
   # as the same method of this class: {#redraw}, {#is_locked}, {#is_public},
-  # {#is_visible}, {#is_hidden}, {#is_owned}, {#raise}, {#lower}, {#redraw}.
+  # {#is_visible}, {#is_hidden}, {#is_owned}, {#raise}, {#lower}, {#redraw},
+  # {#visibility}.
   #
   # @param [array<string>] what Which methods to add.
   # @return [Oghma.KineticThingyDelegate] this
