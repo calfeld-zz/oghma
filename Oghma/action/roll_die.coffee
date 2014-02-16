@@ -19,7 +19,9 @@ Oghma.Action.prototype.roll_die =
     if is_private
       r = 18
       font_size = 18
-      visible_to = [ @O.me().gets( 'name' ), O.GM ]
+      visible_to = [ @O.me().gets( 'name' ) ]
+      if visible_to[0] != O.GM
+        visible_to.push( O.GM )
     else
       r = 25
       font_size = 24
