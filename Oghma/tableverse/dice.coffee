@@ -21,58 +21,32 @@ c_layer = 'dice'
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   thingyverse.dice = new Heron.Index.MapIndex( 'owner' )
 
-  thingyverse.define(
-    'dice',
-    [
-      'sides', 'value',
-      'fill', 'stroke',
-      'font_size',
-      'x', 'y', 'r',
-      'owner',
-      'visible_to'
-    ],
-    {},
-    ( attrs ) ->
-      @__ =
-        x:          attrs.x          ? 0
-        y:          attrs.y          ? 0
-        sides:      attrs.sides      ? 10
-        value:      attrs.value
-        fill:       attrs.fill       ? O.me().gets( 'primary' )
-        stroke:     attrs.stroke     ? O.me().gets( 'secondary' )
-        font_size:  attrs.font_size  ? 24
-        r:          attrs.r          ? 25
-        owner:      attrs.owner      ? O.me().gets( 'name' )
-        visible_to: attrs.visible_to ? []
-
-      @__.value ?= Heron.Util.rand( @__.sides ) + 1
-
-      @after_construction( ->
-        thingyverse.dice.add( this )
-      )
-
-      is_visible = =>
-        @__.visible_to.length == 0 ||
-        @__.visible_to.indexOf( O.me().gets( 'name' ) ) != -1
-
-      if is_visible
+  class DiceDelegate extends Oghma.KineticThingyDelegate
+    draw: ->
+      if ! @__k?
         @__k =
-          polygon: new Kinetic.RegularPolygon(
-            sides:  @__.sides
-            radius: @__.r
-            x:      @__.x
-            y:      @__.y
-            fill:   @__.fill
-            stroke: @__.stroke
-          )
-          text: new Kinetic.Text(
-            text:     @__.value + ''
-            x:        @__.x
-            y:        @__.y
-            fill:     @__.stroke
-            stroke:   null
-            fontSize: @__.font_size
-          )
+          polygon: new Kinetic.RegularPolygon({})
+          text:    new Kinetic.Text({})
+        @group().add( @__k.polygon )
+        @group().add( @__k.text )
+
+      attrs = @thingy().get()
+      @__k.polygon.setAttrs(
+          sides:  attrs.sides
+          radius: attrs.r
+          x:      -attrs.r / 2
+          y:      -attrs.r / 2
+          fill:   attrs.fill
+          stroke: attrs.stroke
+        )
+        @__k.text.setAttrs(
+          text:     attrs.value + ''
+          x:        -attrs.r / 2
+          y:        -attrs.r / 2
+          fill:     attrs.stroke
+          stroke:   null
+          fontSize: attrs.font_size
+        )
 
         # Center text
         @__k.text.setOffset(
@@ -80,37 +54,60 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
           y: @__k.text.getHeight() / 2
         )
 
-        layer = O.layer[ c_layer ]
-        layer.add( @__k.polygon )
-        layer.add( @__k.text )
-        layer.draw()
+    remove: ( thingy ) ->
+      thingyverse.dice.remove( thingy )
+      super thingy
 
-        for name, k of @__k
-          k.on( 'click', ( event )=>
-            if O.i_own( this ) || event.shiftKey
-              @remove()
-          )
+    is_dragable: ( event ) ->
+      if event.ctrlKey
+        @thingy().remove()
+        false
+      else
+        super event
 
-        # Don't emit messages for dice created during sync process.
-        if thingyverse.synced()
-          msg = "d#{@__.sides} = #{@__.value}"
-          if @__.visible_to.length != 0
-            msg += " [#{@__.visible_to.join(', ')}]"
-          O.console.message( O.me().gets( 'name' ), msg )
+  thingyverse.define(
+     'dice',
+    [
+      'sides', 'value',
+      'fill', 'stroke',
+      'font_size',
+      'r'
+    ],
+    {
+      loc:    [ 'x', 'y' ]
+      status: [ 'locked', 'visible_to', 'zindex' ]
+    },
+    ( attrs ) ->
+      attrs.x          ?= 0
+      attrs.y          ?= 0
+      attrs.sides      ?= 10
+      attrs.fill       ?= O.me().gets( 'primary' )
+      attrs.stroke     ?= O.me().gets( 'secondary' )
+      attrs.font_size  ?= 24
+      attrs.r          ?= 25
+      attrs.owner      ?= O.me().gets( 'name' )
+      attrs.visible_to ?= []
+      attrs.value      ?= Heron.Util.rand( attrs.sides ) + 1
 
-      set: (thingy, attrs) ->
-        throw "Can't modify dice."
+      @after_construction( ->
+        thingyverse.dice.add( this )
+      )
 
-        null
+      # Don't emit messages for dice created during sync process.
+      if thingyverse.synced()
+        @after_construction( =>
+          vis = @visibility()
+          if vis != 'none'
+            msg = "d#{attrs.sides} = #{attrs.value}"
+            if vis != 'public'
+              msg += " [#{@gets('visible_to').join(', ')}]"
+            O.console.message( O.me().gets( 'name' ), msg )
+        )
 
-      get: ( thingy, keys... ) ->
-        thingy.__
-
-      remove: ( thingy ) ->
-        thingyverse.dice.remove( thingy )
-        for name, k of thingy.__k
-          k.destroy()
-        O.layer[ c_layer ].draw()
-        null
+      new DiceDelegate(
+        O, this, O.layer[ c_layer ], O.zindex[ c_layer ],
+        [ 'sides', 'value', 'fill', 'stroke', 'font_size', 'r' ],
+        attrs
+      )
   )
 )
