@@ -43,7 +43,7 @@ Oghma.SubMenu.visibility = ( O, thingy, key = 'visible_to' ) ->
     )
   else
     items.push(
-      text: 'Make public.'
+      text: 'Make public'
       handler: -> set( [] )
     )
 
