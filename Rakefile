@@ -125,7 +125,7 @@ EXTERNALS.each do |src, dst|
   end
   if short_path != long_path
     file(short_path => [long_path]) do
-      link(long_path, short_path)
+      copy(long_path, short_path)
     end
   end
   task :externals => [short_path]
