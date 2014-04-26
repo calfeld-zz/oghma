@@ -452,7 +452,7 @@ class Oghma.KineticThingyDelegate
     if @is_context_menuable( event )
       menu = Ext.create( 'Oghma.Ext.Menu', items: @context_menu_items() )
       event.stopPropagation()
-      menu.showAt( [ event.pageX, event.pageY ] )
+      menu.showAt( [ event.evt.pageX, event.evt.pageY ] )
     this
 
   # Policy methods.  Override to change policies.
@@ -486,7 +486,7 @@ class Oghma.KineticThingyDelegate
   # Is thingy dragable?
   # @return [bool] Is thingy dragable?
   is_dragable: ( event ) ->
-    @is_drawn() && ! @is_locked() && ( event.shiftKey || @is_owned() )
+    @is_drawn() && ! @is_locked() && ( event.evt.shiftKey || @is_owned() )
 
   # Is thingy drawn?
   # @return [bool] Is thingy drawn?
@@ -496,4 +496,4 @@ class Oghma.KineticThingyDelegate
   # Is thingy context menuable?
   # @return [bool] Is thingy context menuable?
   is_context_menuable: ( event ) ->
-    event.which == 3 && @is_drawn() && ( @is_owned() || event.shiftKey )
+    event.evt.which == 3 && @is_drawn() && ( @is_owned() || event.evt.shiftKey )

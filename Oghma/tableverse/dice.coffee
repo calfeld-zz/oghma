@@ -59,7 +59,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       super thingy
 
     is_dragable: ( event ) ->
-      if event.ctrlKey
+      if event.evt.ctrlKey
         @thingy().remove()
         false
       else
