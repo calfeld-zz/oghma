@@ -45,18 +45,26 @@ def common_parent(a, b)
   as[0..i].join('/')
 end
 
-def coffee(dst, src)
-  puts "coffee #{src} -> #{dst}"
-  Open3.popen3(COFFEE, '-c', '-p', src) do |cin, cout, cerr, wt|
-    exit_status = wt.value
-    if exit_status.success?
-      File.open(dst, 'w') do |w|
-        w.write(cout.read)
-      end
-    else
-      puts "Failed (#{exit_status}):"
-      puts cerr.read
+def indir(dir)
+  cwd = Dir.pwd
+  Dir.chdir(dir)
+  yield
+  Dir.chdir(cwd)
+end
+
+def coffee(src)
+  puts "coffee #{src}"
+  dir = File.dirname(src)
+  base = File.basename(src)
+  indir(dir) do
+    if ! system(COFFEE, '-c', '-m', base)
+      puts "Failed (#{$?}):"
       throw "coffee failed"
+    end
+    # Fix source map
+    basebase = File.basename(base, '.coffee')
+    File.open("#{basebase}.js", 'a') do |w|
+      w.puts "//# sourceMappingURL=#{basebase}.map"
     end
   end
 end
@@ -69,13 +77,15 @@ def build_coffee_tasks(filelist, dstdir, parenttask)
   filelist.each do |src|
     src = File.expand_path(src)
     common = common_parent(src, dstdir)
-    dst = src.sub(common, dstdir).gsub(/.coffee$/, '.js')
-    dir  = File.dirname(dst)
+    dst_coffee = src.sub(common, dstdir)
+    dst_js = dst_coffee.gsub(/.coffee$/, '.js')
+    dir  = File.dirname(dst_coffee)
 
     # Create actual tasks
     directoryp(dir)
-    file(dst => [src, dir]) {coffee(dst, src)}
-    task(parenttask => [dst])
+    file(dst_coffee => [src, dir]) {copy(src, dst_coffee)}
+    file(dst_js => [dst_coffee]) {coffee(dst_coffee)}
+    task(parenttask => [dst_js])
   end
 end
 
