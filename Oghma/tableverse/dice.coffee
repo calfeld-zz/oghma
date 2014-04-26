@@ -32,27 +32,27 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
       attrs = @thingy().get()
       @__k.polygon.setAttrs(
-          sides:  attrs.sides
-          radius: attrs.r
-          x:      -attrs.r / 2
-          y:      -attrs.r / 2
-          fill:   attrs.fill
-          stroke: attrs.stroke
-        )
-        @__k.text.setAttrs(
-          text:     attrs.value + ''
-          x:        -attrs.r / 2
-          y:        -attrs.r / 2
-          fill:     attrs.stroke
-          stroke:   null
-          fontSize: attrs.font_size
-        )
+        sides:  attrs.sides
+        radius: attrs.r
+        x:      -attrs.r / 2
+        y:      -attrs.r / 2
+        fill:   attrs.fill
+        stroke: attrs.stroke
+      )
+      @__k.text.setAttrs(
+        text:     attrs.value + ''
+        x:        -attrs.r / 2
+        y:        -attrs.r / 2
+        fill:     attrs.stroke
+        stroke:   null
+        fontSize: attrs.font_size
+      )
 
-        # Center text
-        @__k.text.setOffset(
-          x: @__k.text.getWidth()  / 2
-          y: @__k.text.getHeight() / 2
-        )
+      # Center text
+      @__k.text.setOffset(
+        x: @__k.text.getWidth()  / 2
+        y: @__k.text.getHeight() / 2
+      )
 
     remove: ( thingy ) ->
       thingyverse.dice.remove( thingy )
@@ -68,6 +68,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   thingyverse.define(
      'dice',
     [
+      'owner',
       'sides', 'value',
       'fill', 'stroke',
       'font_size',
