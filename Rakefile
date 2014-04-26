@@ -28,7 +28,7 @@ COFFEE = 'coffee'
 
 EXTERNALS = [
   [ "http://coffeescript.org/extras/coffee-script.js", "coffee-script.js" ],
-  [ "http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.4.js", "kinetic.js" ],
+  [ "http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.1.0.js", "kinetic.js" ],
   [ "http://code.jquery.com/jquery-2.0.3.js", "jquery.js" ]
 ]
 

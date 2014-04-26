@@ -46,8 +46,8 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
     @on( 'boxready', ( it, width, height ) =>
       @on( 'resize', ( it, width, height ) =>
         @stage.setSize(
-          width  * @stageSizeMultiplier,
-          height * @stageSizeMultiplier
+          width: width  * @stageSizeMultiplier
+          height: height * @stageSizeMultiplier
         )
         recenter()
       )
@@ -85,8 +85,8 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
     stage_width = @stageSizeMultiplier * size.width
     stage_height = @stageSizeMultiplier * size.height
     @stage.setOffset(
-      x - ( stage_width  / 2 ) / scale.x,
-      y - ( stage_height / 2 ) / scale.y
+      x: x - ( stage_width  / 2 ) / scale.x
+      y: y - ( stage_height / 2 ) / scale.y
     )
     @stage.draw()
 
@@ -132,7 +132,7 @@ Ext.define( 'Oghma.Ext.InfiniteKineticPanel',
   # @return [Oghma.Ext.InfiniteKineticPanel] this
   setZoom: ( zoom ) ->
     center = @getCenter()
-    @stage.setScale( zoom, zoom )
+    @stage.setScale( x: zoom, y: zoom )
     @setCenter( center... )
     @onZoom.fire( zoom )
 
