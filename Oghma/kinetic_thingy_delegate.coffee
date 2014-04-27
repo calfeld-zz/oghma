@@ -401,6 +401,13 @@ class Oghma.KineticThingyDelegate
     @group().on( 'dragend', ( event ) =>
       @thingy().set( @group().getPosition(), no_redraw: true )
     )
+    @group().on( 'dragmove', ( event ) =>
+      if @is_grid_controlled()
+        pos = @group().getPosition()
+        new_pos = O.grid.nearest( [ pos.x, pos.y ] )
+        if new_pos[0] != pos.x or new_pos[1] != pos.y
+          @group().setPosition( x: new_pos[0], y: new_pos[1] )
+    )
     this
 
   # Return list of standard context menu items.
@@ -497,3 +504,9 @@ class Oghma.KineticThingyDelegate
   # @return [bool] Is thingy context menuable?
   is_context_menuable: ( event ) ->
     event.evt.which == 3 && @is_drawn() && ( @is_owned() || event.evt.shiftKey )
+
+  # Is thingy controlled by grid mode.
+  # @return [bool] Is thingy controlled by grid mode.
+  is_grid_controlled: ->
+    true
+
