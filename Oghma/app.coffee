@@ -91,6 +91,16 @@ class Oghma.App
     ]
   )
 
+  # Grid Snap
+  grid_snap: new Heron.Enumeration(
+    values: [
+      { name: 'None',     mode: null       },
+      { name: 'Grid',     mode: 'grid'     },
+      { name: 'Antigrid', mode: 'antigrid' },
+      { name: 'Both',     mode: 'both'     }
+    ]
+  )
+
   # Default table.
   default_table: 'Antechamber'
 
@@ -298,12 +308,21 @@ class Oghma.App
           id: 'status_visibility'
           text: "N/A"
           menu: Oghma.Status.visibility( this, @_.set_visibility_title )
+        },
+        {
+          id: 'status_grid_snap'
+          text: "Snap: Grid"
+          menu: Oghma.Status.grid_snap( this )
         }
       ]
     )
     @viewport.add( @statusbar )
     @ui_colors.on_set( ( value ) =>
       @statusbar.child( '#status_ui_colors' ).setText( "UI: #{value.name}" )
+    )
+    @grid_snap.on_set( ( value, index ) =>
+      @statusbar.child( '#status_grid_snap' ).setText( "Snap: #{value.name}" )
+      @grid.set_mode( value.mode )
     )
     @table.onZoom.add( ( zoom ) =>
       @statusbar.child( '#status_zoom' ).setText( "Zoom: #{zoom_to_text(zoom)}" )
