@@ -54,18 +54,6 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
         thingyverse.table.add( this )
       )
 
-      # Grid distance to kinetic distance.
-      @g2k = ( d ) ->
-        d * @__.grid
-
-      # Grid vector to kinetic vector.
-      @vec_g2k = ( v ) ->
-        [ @g2k(v[0]) + @__.origin[0], @g2k(v[1]) + @__.origin[1] ]
-
-      # Origin in kinetic coordinates.
-      @origin_k = ->
-        @vec_g2k( [ 0, 0 ] )
-
       set: ( thingy, attrs ) ->
         for k, v of attrs
           thingy.__[k] = v
