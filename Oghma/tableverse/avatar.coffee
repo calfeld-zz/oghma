@@ -20,15 +20,48 @@ c_layer = 'avatars'
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   thingyverse.avatar = new Heron.Index.MapIndex( 'owner', 'name' )
 
+  show_labels = ->
+    thingyverse.avatar.each( ( avatar ) ->
+      avatar.show_label()
+    )
+  hide_labels = ->
+    thingyverse.avatar.each( ( avatar ) ->
+      avatar.hide_label()
+    )
+
   class AvatarDelegate extends Oghma.KineticThingyDelegate
+    constructor: ( args... ) ->
+      super args...
+
+      @thingy().show_label = =>
+        if @is_visible() && @__k?
+          tween = new Kinetic.Tween(
+            node:     @__k.label,
+            duration: 0.25,
+            opacity:  1
+          )
+          tween.play()
+        this
+      @thingy().hide_label = =>
+        if @is_visible() && @__k?
+          tween = new Kinetic.Tween(
+            node:     @__k.label,
+            duration: 0.25,
+            opacity:  0
+          )
+          tween.play()
+        this
+
     draw: ->
       if ! @__k?
         @__k =
+          disk: new Kinetic.Group({})
           a: new Kinetic.Wedge({})
           b: new Kinetic.Wedge({})
           label: new Kinetic.Text({})
-        @group().add( @__k.a )
-        @group().add( @__k.b )
+        @__k.disk.add( @__k.a )
+        @__k.disk.add( @__k.b )
+        @group().add( @__k.disk )
         @group().add( @__k.label )
 
       attrs = @thingy().get()
@@ -53,12 +86,18 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         fill:     O.ui_colors.value().primary
         stroke:   O.ui_colors.value().primary
         fontSize: 16
+        opacity:  0
       )
 
       # Center text
       @__k.label.setOffset(
         x: @__k.label.getWidth()  / 2
       )
+
+      # Label Bindings
+      @__k.disk.on( 'mouseenter', show_labels )
+      @__k.disk.on( 'mouseleave', hide_labels )
+
 
     remove: ( thingy ) ->
       thingyverse.avatar.remove( thingy )
