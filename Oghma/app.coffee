@@ -97,6 +97,9 @@ class Oghma.App
   # Current table, a table thingy.
   current_table: null
 
+  # Grid services.  See Oghma.Grid.
+  grid: null
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -168,6 +171,9 @@ class Oghma.App
 
       @join_table( initial_table )
     )
+
+    # Services
+    @grid = new Oghma.Grid( this )
 
     # Allow right clicks to hit nodes.
     window.oncontextmenu = ( event ) ->
