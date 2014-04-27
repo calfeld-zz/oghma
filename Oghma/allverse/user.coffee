@@ -70,13 +70,6 @@ Oghma.Thingy.Allverse.register( ( thingyverse, O ) ->
 
       O.table.setZoom( @__.zoom )
 
-      # Note: Only does something if different than current.
-      for v, i in O.ui_colors.values()
-        if v.Name == @__.ui_colors
-          O.ui_colors.set_index( i )
-          break
-      O.ui_colors.on_set( ( v ) => @set( ui_colors: v.name ) )
-
       update_info = ( which ) =>
         return if @__update_guard
         ext = @__managed_windows[ which ]

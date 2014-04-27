@@ -318,6 +318,18 @@ class Oghma.App
       @statusbar.child( '#status_table' ).setText( "Table: #{which}" )
     )
 
+    # Keep ui colors in sync.
+    @on( 'post_login', =>
+      # Note: Only does something if different than current.
+      for v, i in @ui_colors.values()
+        ui_colors = @me().gets( 'ui_colors' )
+        if v.name == ui_colors
+          @ui_colors.set_index( i )
+          break
+
+      @ui_colors.on_set( ( v ) => @me().set( ui_colors: v.name ) )
+    )
+
     @verbose( 'Oghma is connecting...' )
 
     # Connect
