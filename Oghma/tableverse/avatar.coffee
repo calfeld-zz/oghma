@@ -50,8 +50,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       @__k.label.setAttrs(
         text:     attrs.name + ''
         y:        25
-        fill:     'black'
-        stroke:   'black'
+        fill:     O.ui_colors.value().primary
+        stroke:   O.ui_colors.value().primary
         fontSize: 16
       )
 
@@ -93,5 +93,11 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         [ 'color1', 'color2', 'name' ],
         attrs
       )
+  )
+
+  O.ui_colors.on_set( ->
+    O.tableverse.avatar.each( ( avatar ) ->
+      avatar.redraw()
+    )
   )
 )
