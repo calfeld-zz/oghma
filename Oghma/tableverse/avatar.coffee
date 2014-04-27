@@ -17,6 +17,8 @@ Oghma.Thingy ?= {}
 
 c_layer = 'avatars'
 
+# All attributes are in table coordinates.
+
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   thingyverse.avatar = new Heron.Index.MapIndex( 'owner', 'name' )
 
@@ -70,19 +72,19 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         y: 0
         fill: 'blue'
         angle: 180
-        radius: 25
+        radius: attrs.size / 2
       )
       @__k.b.setAttrs(
         x: 0
         y: 0
         fill: 'red'
         angle: 180
-        radius: 25
+        radius: attrs.size / 2
         rotation: 180
       )
       @__k.label.setAttrs(
         text:     attrs.name + ''
-        y:        25
+        y:        attrs.size / 2
         fill:     O.ui_colors.value().primary
         stroke:   O.ui_colors.value().primary
         fontSize: 16
@@ -108,7 +110,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
     [
       'name',
       'color1', 'color2',
-      'owner'
+      'owner',
+      'size'
     ],
     {
       loc:    [ 'x', 'y' ]
@@ -122,6 +125,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       attrs.owner      ?= O.me().gets( 'name' )
       attrs.visible_to ?= []
       attrs.name       ?= attrs.owner
+      attrs.size       ?= O.grid.grid()
 
       @after_construction( ->
         thingyverse.avatar.add( this )
