@@ -15,203 +15,83 @@
 Oghma = @Oghma ?= {}
 Oghma.Thingy ?= {}
 
-# Layer for avatar.
-c_layer       = 'avatars'
-
-# Local data to tell set to not redraw.
-c_no_redraw = 'no_redraw'
+c_layer = 'avatars'
 
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
-  thingyverse.avatar = new Heron.Index.MapIndex(
-    'owner',
-    'name',
-    'category',
-    'group'
-  )
+  thingyverse.avatar = new Heron.Index.MapIndex( 'owner', 'name' )
 
-  draw_layer = ->
-    O.layer[ c_layer ].draw()
+  class AvatarDelegate extends Oghma.KineticThingyDelegate
+    draw: ->
+      if ! @__k?
+        @__k =
+          a: new Kinetic.Wedge({})
+          b: new Kinetic.Wedge({})
+          label: new Kinetic.Text({})
+        @group().add( @__k.a )
+        @group().add( @__k.b )
+        @group().add( @__k.label )
 
-  show_labels = ->
-    thingyverse.avatar.each( ( avatar ) ->
-      avatar.show_label()
-    )
-  hide_labels = ->
-    thingyverse.avatar.each( ( avatar ) ->
-      avatar.hide_label()
-    )
+      attrs = @thingy().get()
+      @__k.a.setAttrs(
+        x: 0
+        y: 0
+        fill: 'blue'
+        angle: 180
+        radius: 25
+      )
+      @__k.b.setAttrs(
+        x: 0
+        y: 0
+        fill: 'red'
+        angle: 180
+        radius: 25
+        rotation: 180
+      )
+      @__k.label.setAttrs(
+        text:     attrs.name + ''
+        y:        25
+        fill:     'black'
+        stroke:   'black'
+        fontSize: 16
+      )
 
-  min_z = null
-  max_z = null
-  O.on( 'join_table', ->
-    # XXX Sort all avatars by z and then raise/lower appropriately.
+      # Center text
+      @__k.label.setOffset(
+        x: @__k.label.getWidth()  / 2
+      )
 
-    # XXX set min_z and max_z
-  )
-  # XXX on create/raise set z to max_z+1 and increment max_z.
-  # XXX on lower set z to min_z-1 and decrement min_z.
+    remove: ( thingy ) ->
+      thingyverse.avatar.remove( thingy )
+      super thingy
 
   thingyverse.define(
-    'avatar',
+     'avatar',
     [
-      'font_size',
-      'r',
-      'owner',
       'name',
-      'index',
-      'group',
-      'category',
-      'fill', 'stroke',
-      'token'
+      'color1', 'color2',
+      'owner'
     ],
     {
-      vis: ['visible_to' ]
-      loc: [ 'x', 'y' ]
+      loc:    [ 'x', 'y' ]
+      status: [ 'locked', 'visible_to', 'zindex' ]
     },
     ( attrs ) ->
-      @__ =
-        x:          attrs.x          ? 0
-        y:          attrs.y          ? 0
-        font_size:  attrs.font_size  ? 12
-        r:          attrs.r          ? O.current_table.g2k(1)
-        owner:      attrs.owner      ? O.me().gets( 'name' )
-        name:       attrs.name       ? ''
-        index:      attrs.index      ? ''
-        group:      attrs.group      ? 'undetermined'
-        category:   attrs.category   ? 'undetermined'
-        fill:       attrs.fill       ? O.me().gets( 'primary' )
-        stroke:     attrs.stroke     ? O.me().gets( 'secondary' )
-        token:      attrs.token      ? ''
-        visible_to: attrs.visible_to ? []
-        id:         attrs.id         ? Heron.Util.generate_id()
+      attrs.x          ?= 0
+      attrs.y          ?= 0
+      attrs.color1     ?= O.me().gets( 'primary' )
+      attrs.color2     ?= O.me().gets( 'secondary' )
+      attrs.owner      ?= O.me().gets( 'name' )
+      attrs.visible_to ?= []
+      attrs.name       ?= attrs.owner
 
       @after_construction( ->
         thingyverse.avatar.add( this )
       )
 
-      @is_owned = =>
-        O.me().gets('name') == @__.owner
-
-      @is_visible = =>
-        @__.visible_to.length == 0 ||
-        @__.visible_to.indexOf( O.me().gets( 'name' ) ) != -1 ||
-        O.isGM()
-
-      @show_label = =>
-        if @is_visible() && @__k?
-          tween = new Kinetic.Tween(
-            node:     @__klabel,
-            duration: 0.25,
-            opacity:  1
-          )
-          tween.play()
-      @hide_label = =>
-        if @is_visible() && @__k?
-          tween = new Kinetic.Tween(
-            node:     @__klabel,
-            duration: 0.25,
-            opacity:  0
-          )
-          tween.play()
-
-      @__redraw = =>
-        @__k.destroy() if @__k?
-        if @is_visible()
-          @__k = new Kinetic.Group(
-            x: @__.x
-            y: @__.y
-          )
-          @__kdisk = new Kinetic.Circle(
-            radius:    @__.r
-            fill:      @__.fill
-            stroke:    @__.stroke
-          )
-          @__klabel = new Kinetic.Text(
-            text:     @__.name + if @__.index? then ' ' + @__.index else ''
-            align:    'center'
-            y:        -1 * @__.r - @__.font_size
-            fill:     @__.stroke
-            stroke:   null
-            fontSize: @__.font_size
-            opacity:  0
-          )
-          @__klabel.setOffset( x: @__klabel.getWidth() / 2  )
-          @__k.add( @__kdisk )
-          @__k.add( @__klabel )
-
-          if @__.token != ''
-            image = new Image()
-            image.onload = =>
-              @__ktoken = new Kinetic.Image(
-                image:   image
-                offsetX: @__.r
-                offsetY: @__.r
-                width:   2 * @__.r
-                height:  2 * @__.r
-              )
-              @__k.add(@__ktoken)
-              draw_layer()
-            image.src = @__.token
-
-          @__kdisk.on( 'click', ( e ) =>
-            if e.which == 3 && ( @is_owned() || e.shiftKey )
-              items = [
-                {
-                  text: 'Remove'
-                  handler: => @remove()
-                }
-              ]
-              if O.isGM()
-                items.push('-')
-                items = items.concat( Oghma.SubMenu.visibility( O, this ) )
-              menu = Ext.create( 'Oghma.Ext.Menu', items: items )
-              e.stopPropagation()
-              menu.showAt( [ e.pageX, e.pageY ] )
-          )
-
-          @__k.on( 'mousedown', ( e ) =>
-            if @is_owned() || e.shiftKey
-              @__k.setDraggable(true)
-          )
-          @__k.on( 'dragend', ( e ) =>
-            @__k.setDraggable(false)
-            @set( @__k.getPosition(), c_no_redraw )
-          )
-
-          @__kdisk.on( 'mouseenter', show_labels )
-          @__kdisk.on( 'mouseleave', hide_labels )
-
-          O.layer[ c_layer ].add( @__k )
-
-      @__redraw()
-      draw_layer()
-
-      set: (thingy, attrs, local_data) ->
-        need_redraw = false
-        for k, v of attrs
-          if v != thingy.__[k]
-            thingy.__[k] = v
-            need_redraw = true
-        if need_redraw && local_data != c_no_redraw
-          thingy.__redraw()
-          draw_layer()
-
-        null
-
-      get: ( thingy, keys... ) ->
-        thingy.__
-
-      remove: ( thingy ) ->
-        thingyverse.avatar.remove( thingy )
-        thingy.__k.destroy()
-        draw_layer()
-        null
-    )
-
-  O.ui_colors.on_set( ->
-    O.tableverse.avatar.each( ( avatar ) ->
-      avatar.__redraw()
-      draw_layer()
-    )
+      new AvatarDelegate(
+        O, this, O.layer[ c_layer ], O.zindex[ c_layer ],
+        [ 'color1', 'color2', 'name' ],
+        attrs
+      )
   )
 )
