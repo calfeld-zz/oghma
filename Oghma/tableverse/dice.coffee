@@ -65,6 +65,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       else
         super event
 
+    is_grid_controlled: -> false
+
   thingyverse.define(
      'dice',
     [
