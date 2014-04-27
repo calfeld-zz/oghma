@@ -331,13 +331,16 @@ class Oghma.App
       @_.set_visibility_title( @me().geta( 'show_hidden', 'show_all' )... )
     )
     status_location = @statusbar.child( '#status_location' )
-    Ext.getDoc().on(
-      mousemove: =>
-        [ x, y ] = @table.mouse()
-        if ! x?
-          status_location.setText( "@???" )
-        else
-          status_location.setText( "@#{x},#{y}" )
+    @on( 'post_login', =>
+      Ext.getDoc().on(
+        mousemove: =>
+          [ x, y ] = @table.mouse()
+          [ gx, gy ] = @grid.to_grid( [ x, y ] )
+          if ! x?
+            status_location.setText( "@???" )
+          else
+            status_location.setText( "@#{gx.toFixed(1)},#{gy.toFixed(1)}" )
+      )
     )
     @on( 'join_table', ( which ) =>
       @statusbar.child( '#status_table' ).setText( "Table: #{which}" )

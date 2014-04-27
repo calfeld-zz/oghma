@@ -14,19 +14,31 @@
 
 Oghma = @Oghma ?= {}
 
-Oghma.Action.prototype.show_origin_marker = ( layer = 'dice' ) ->
+Oghma.Action.prototype.show_origin_marker = ( O, layer = 'dice' ) ->
   origin = new Kinetic.Circle(
     radius: 20
     x:      0
     y:      0
     fill:   'blue'
-    stroke: 'red'
+    stroke: 'black'
     id:     'origin_marker'
   )
+  grid_origin_pt = O.grid.from_grid( [ 0, 0 ] )
+  grid_origin = new Kinetic.Circle(
+    radius: 20
+    x:      grid_origin_pt[0]
+    y:      grid_origin_pt[1]
+    fill:   'green'
+    stroke: 'black'
+    id:     'grid_origin_marker'
+  )
   @O.layer[ layer ].add( origin )
+  @O.layer[ layer ].add( grid_origin )
   @O.layer[ layer ].draw()
 
 Oghma.Action.prototype.hide_origin_marker = ( layer = 'dice' ) ->
   for obj in @O.layer[ layer ].get( '#origin_marker' )
+    obj.destroy()
+  for obj in @O.layer[ layer ].get( '#grid_origin_marker' )
     obj.destroy()
   @O.layer[ layer ].draw()

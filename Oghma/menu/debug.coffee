@@ -42,7 +42,7 @@ Oghma.Menu.debug = ( O ) ->
         checked: false
         handler: ->
           if @checked
-            O.action.show_origin_marker()
+            O.action.show_origin_marker( O )
           else
             O.action.hide_origin_marker()
       },
