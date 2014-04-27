@@ -45,17 +45,18 @@ Ext.define( 'Oghma.Ext.EnumerationMenu',
     id = @getId()
 
     Ext.apply( this,
-      listeners: ->
-        current = me.enumeration.index()
-        for v, i in me.enumeration.values()
-          @child( i+'' ).setChecked( i == current )
+      listeners:
+        beforeshow: ->
+          current = me.enumeration.index()
+          for v, i in me.enumeration.values()
+            @child( '#'+i+'_'+id ).setChecked( i == current )
 
-        n = me.enumeration.values().length
-        if ! me.enumeration.cycle()
-          if me.increment
-            @child( '#incr' ).setDisabled( i >= n - 1 )
-          if me.decrement
-            @child( '#decr' ).setDisabled( i <= 0)
+          n = me.enumeration.values().length
+          if ! me.enumeration.cycle()
+            if me.increment
+              @child( '#incr' ).setDisabled( i >= n - 1 )
+            if me.decrement
+              @child( '#decr' ).setDisabled( i <= 0)
     )
 
     if @increment?
@@ -75,7 +76,7 @@ Ext.define( 'Oghma.Ext.EnumerationMenu',
       do (i) =>
         @add(
           text:    @namer(v)
-          id:      i+''
+          id:      i+'_'+id
           checked: i == @enumeration.index()
           group:   id
           handler: =>
