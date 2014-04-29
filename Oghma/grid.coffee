@@ -24,7 +24,7 @@ class Oghma.Grid
   constructor: ( O ) ->
     @_ =
       O: O
-      mode: 'grid'
+      mode: 'auto'
 
   # Convert table coordinates to grid coordinates.
   to_grid: ( pt ) ->
@@ -60,13 +60,31 @@ class Oghma.Grid
   #
   # Parameter and result are in table coordinates.
   #
+  # @param [x, y] pt Point in table coordinates to find nearest grid point of.
+  # @param [x, y] from Point moving from for auto mode.
+  # @param [string] mode Mode to use, defaults to @_.mode.
+  #
   # Modes:
   # - null -- Identity function.
   # - grid -- Nearest grid coordinate.
   # - antigrid -- Nearest antigrid coordinate.
   # - both -- Nearest grid or antigrid coordinate.
-  nearest: ( pt ) ->
-    round = switch @_.mode
+  # - auto -- Choose grid or antigrid based on from parameter.
+  nearest: ( pt, from = null, mode = @_.mode ) ->
+    if mode == 'auto'
+      if from?
+        distance = ( a, b ) ->
+          Math.max( Math.abs( b[1] - a[1] ), Math.abs( b[0] - a[0] ) )
+        nearest_grid = @nearest( from, null, 'grid' )
+        nearest_antigrid = @nearest( from, null, 'antigrid' )
+        if distance( from, nearest_grid ) < distance( from, nearest_antigrid )
+          mode = 'grid'
+        else
+          mode = 'antigrid'
+      else
+        mode = 'both'
+
+    round = switch mode
       when null then ( x ) -> x
       when 'grid'
         # Round to nearest integer.
@@ -78,7 +96,7 @@ class Oghma.Grid
         # Round to nearest half or full integer.
         ( x ) -> Math.round( x * 2 ) / 2
       else
-        throw "Unknown grid mode: #{@_mode}"
+        throw "Unknown grid mode: #{mode}"
 
     grid_pt = @to_grid( pt )
     @from_grid( [ round( grid_pt[0] ), round( grid_pt[1] ) ] )

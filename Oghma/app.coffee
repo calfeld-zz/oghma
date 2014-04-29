@@ -95,10 +95,12 @@ class Oghma.App
   grid_snap: new Heron.Enumeration(
     values: [
       { name: 'None',     mode: null       },
+      { name: 'Auto',     mode: 'auto'     },
+      { name: 'Both',     mode: 'both'     },
       { name: 'Grid',     mode: 'grid'     },
-      { name: 'Antigrid', mode: 'antigrid' },
-      { name: 'Both',     mode: 'both'     }
-    ]
+      { name: 'Antigrid', mode: 'antigrid' }
+    ],
+    index: 1
   )
 
   # Default table.
@@ -311,7 +313,7 @@ class Oghma.App
         },
         {
           id: 'status_grid_snap'
-          text: "Snap: Grid"
+          text: "Snap: #{@grid_snap.value().name}"
           menu: Oghma.Status.grid_snap( this )
         }
       ]

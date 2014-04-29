@@ -401,10 +401,15 @@ class Oghma.KineticThingyDelegate
     @group().on( 'dragend', ( event ) =>
       @thingy().set( @group().getPosition(), no_redraw: true )
     )
+    drag_start_pos = null
+    @group().on( 'dragstart', => drag_start_pos = @group().getPosition() )
     @group().on( 'dragmove', ( event ) =>
       if @is_grid_controlled()
         pos = @group().getPosition()
-        new_pos = O.grid.nearest( [ pos.x, pos.y ] )
+        new_pos = O.grid.nearest(
+          [ pos.x, pos.y ],
+          [ drag_start_pos.x, drag_start_pos.y]
+        )
         if new_pos[0] != pos.x or new_pos[1] != pos.y
           @group().setPosition( x: new_pos[0], y: new_pos[1] )
     )
