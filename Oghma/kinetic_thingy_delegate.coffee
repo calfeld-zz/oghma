@@ -463,7 +463,7 @@ class Oghma.KineticThingyDelegate
   context_menu: ( event ) ->
     if @is_context_menuable( event )
       menu = Ext.create( 'Oghma.Ext.Menu', items: @context_menu_items() )
-      event.stopPropagation()
+      event.evt.stopPropagation()
       menu.showAt( [ event.evt.pageX, event.evt.pageY ] )
     this
 
