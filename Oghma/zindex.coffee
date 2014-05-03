@@ -13,7 +13,6 @@
 # limitations under the License.
 
 Oghma = @Oghma ?= {}
-Oghma.Thingy ?= {}
 
 #
 #On local create, call acquire_top_index which provides a z index for the top of the heap.  Then create the thingy with that zindex.  Then call register.
