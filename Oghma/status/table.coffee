@@ -47,6 +47,8 @@ Oghma.Status.table = ( O ) ->
     visible_to.length == 0 ||
     visible_to.indexOf( O.me().gets( 'name' ) ) != -1
 
+  O.ui_colors.on_set( -> O.action.update_grid_controls( O ) )
+
   Ext.create( 'Oghma.Ext.Menu',
     items: [ 'Placeholder' ]
     listeners:
@@ -81,6 +83,18 @@ Oghma.Status.table = ( O ) ->
             handler: ->
               if confirm( "Delete #{current}" )
                 delete_table( current_table )
+          )
+          @add('-')
+          @add(
+            text: 'Edit Grid'
+            checked: O.action.grid_controls_visible()
+            checkHandler: ( item, checked ) =>
+              if checked
+                O.action.show_grid_controls( O )
+                O.action.return_to_origin()
+              else
+                O.action.hide_grid_controls()
+              @hide()
           )
           @add('-')
 
