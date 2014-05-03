@@ -248,24 +248,14 @@ class Oghma.App
         {
           text: 'Window'
           menu: Oghma.Menu.window( this )
+        },
+        {
+          text: 'Debug'
+          menu: Oghma.Menu.debug( this )
         }
       ]
     )
     @viewport.add( @toolbar_main )
-
-    @on( 'post_login', ( me ) =>
-      if me.gets( 'name' ) == @GM
-        @toolbar_gm = Ext.create( 'Ext.toolbar.Toolbar',
-          region: 'north'
-          items: [
-            {
-              text: 'Debug'
-              menu: Oghma.Menu.debug( this )
-            }
-          ]
-        )
-        @viewport.add( @toolbar_gm )
-    )
 
     # Status bar
     zoom_to_text = ( zoom ) -> Math.floor( zoom * 100 ) + '%'
