@@ -45,6 +45,10 @@ Ext.define( 'Oghma.Ext.Table',
         @apply_dropper( @t( [ e.getX(), e.getY() ] )..., e )
         null
       )
+      @getEl().on( 'mousemove', ( e ) =>
+        @move_dropper( @t( [ e.getX(), e.getY() ] )..., e )
+        null
+      )
     )
 
     @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getDoc() )
@@ -53,10 +57,15 @@ Ext.define( 'Oghma.Ext.Table',
 
   # Load a function into the dropper.
   #
-  # @param [function(x, y, event)] Event to load.
+  # The click function may call load_dropper() to support multi-dropper
+  # functionality.
+  #
+  # @param [function(x, y, event)] click Function to load for click.
+  # @param [function(x, y, event)] move  Function to load for move.
   # @return [Oghma.App] this
-  load_dropper: ( f ) ->
-    @dropper = f
+  load_dropper: ( click, move = null ) ->
+    @dropper_click = click
+    @dropper_mvoe  = move
     document.body.style.cursor = 'crosshair'
     this
 
@@ -64,8 +73,19 @@ Ext.define( 'Oghma.Ext.Table',
   #
   # @return [Oghma.App] this
   unload_dropper: ->
-    @dropper = null
+    @dropper_click = null
+    @dropper_move  = null
     document.body.style.cursor = 'default'
+    this
+
+  # Move the dropper.
+  #
+  # @param [numeric] x X stage location.
+  # @param [numeric] y Y stage location.
+  # @param [Object] e Event
+  # @return [Oghma.App] this
+  move_dropper: ( x, y, e = null ) ->
+    @dropper_move?( x, y, e )
     this
 
   # Apply the dropper.
@@ -75,9 +95,10 @@ Ext.define( 'Oghma.Ext.Table',
   # @param [Object] e Event
   # @return [Oghma.App] this
   apply_dropper: ( x, y, e = null ) ->
-    @dropper?( x, y, e )
+    original_dropper_click = @dropper_click
     if ! e? || ! e.altKey
       @unload_dropper()
+    original_dropper_click?( x, y, e )
     this
 
   # Add a binding.
