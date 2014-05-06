@@ -112,6 +112,9 @@ class Oghma.App
   # Grid services.  See Oghma.Grid.
   grid: null
 
+  # TwoPoint services.  See Oghma.TwoPoint.
+  twopoint: null
+
   # Constructor
   #
   # Sets up server connections for {Heron.Comet} and {Heron.Dictionary} and
@@ -160,6 +163,28 @@ class Oghma.App
         @login_phase()
     )
 
+    # Viewport and Kinetic Panel
+    @viewport = Ext.create(
+      'Ext.container.Viewport',
+      layout: 'border'
+    )
+    @table = Ext.create( 'Oghma.Ext.Table',
+      region: 'center'
+    )
+    @table.onZoom.add( ( zoom ) => @me()?.set( zoom: zoom ) )
+
+    @viewport.add( @table )
+    @stage = @table.stage
+
+    for layer_name in @layer_order
+      @layer[ layer_name ] = new Kinetic.Layer()
+      @zindex[ layer_name ] = new Oghma.ZIndex()
+      @stage.add( @layer[ layer_name ] )
+
+    # Services
+    @grid = new Oghma.Grid( this )
+    @twopoint = new Oghma.TwoPoint( this, @layer.controls )
+
     # Thingyverses
     @allverse = new Heron.Thingyverse()
     Oghma.Thingy.Allverse.generate( @allverse, this )
@@ -184,9 +209,6 @@ class Oghma.App
       @join_table( initial_table )
     )
 
-    # Services
-    @grid = new Oghma.Grid( this )
-
     # Allow right clicks to hit nodes.
     window.oncontextmenu = ( event ) ->
         event.preventDefault()
@@ -204,24 +226,6 @@ class Oghma.App
 
     # Action
     @action = new Oghma.Action( this )
-
-    # Viewport and Kinetic Panel
-    @viewport = Ext.create(
-      'Ext.container.Viewport',
-      layout: 'border'
-    )
-    @table = Ext.create( 'Oghma.Ext.Table',
-      region: 'center'
-    )
-    @table.onZoom.add( ( zoom ) => @me()?.set( zoom: zoom ) )
-
-    @viewport.add( @table )
-    @stage = @table.stage
-
-    for layer_name in @layer_order
-      @layer[ layer_name ] = new Kinetic.Layer()
-      @zindex[ layer_name ] = new Oghma.ZIndex()
-      @stage.add( @layer[ layer_name ] )
 
     # Set up keymap
     @keymap = Ext.create( 'Ext.util.KeyMap', target: Ext.getDoc() )
