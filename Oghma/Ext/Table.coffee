@@ -40,9 +40,13 @@ Ext.define( 'Oghma.Ext.Table',
     @callParent( arguments )
 
     @on( 'afterrender', =>
-      @getEl().on( 'click', ( e ) =>
+      @getEl().on( 'mousedown', ( e ) =>
+        @down_dropper( @t( [ e.getX(), e.getY() ] )..., e )
+        null
+      )
+      @getEl().on( 'mouseup', ( e ) =>
         O.reset_focus()
-        @apply_dropper( @t( [ e.getX(), e.getY() ] )..., e )
+        @up_dropper( @t( [ e.getX(), e.getY() ] )..., e )
         null
       )
       @getEl().on( 'mousemove', ( e ) =>
@@ -60,12 +64,16 @@ Ext.define( 'Oghma.Ext.Table',
   # The click function may call load_dropper() to support multi-dropper
   # functionality.
   #
-  # @param [function(x, y, event)] click Function to load for click.
-  # @param [function(x, y, event)] move  Function to load for move.
+  # @param [function(x, y, event)] up Function to load for mouse up.
+  # @param [function(x, y, event)] down Function to load for mouse down.
+  # @param [function(x, y, event)] move  Function to load for mouse move.
+  # @param [function()] unload Function to load for unload.
   # @return [Oghma.App] this
-  load_dropper: ( click, move = null ) ->
-    @dropper_click = click
-    @dropper_mvoe  = move
+  load_dropper: ( up, down = null, move = null, unload = null ) ->
+    @dropper_up     = up
+    @dropper_down   = down
+    @dropper_move   = move
+    @dropper_unload = unload
     document.body.style.cursor = 'crosshair'
     this
 
@@ -73,9 +81,22 @@ Ext.define( 'Oghma.Ext.Table',
   #
   # @return [Oghma.App] this
   unload_dropper: ->
-    @dropper_click = null
-    @dropper_move  = null
+    @dropper_unload?()
+    @dropper_up     = null
+    @dropper_down   = null
+    @dropper_move   = null
+    @dropper_unload = null
     document.body.style.cursor = 'default'
+    this
+
+  # Mouse down the dropper.
+  #
+  # @param [numeric] x X stage location.
+  # @param [numeric] y Y stage location.
+  # @param [Object] e Event
+  # @return [Oghma.App] this
+  down_dropper: ( x, y, e = null ) ->
+    @dropper_down?( x, y, e )
     this
 
   # Move the dropper.
@@ -88,17 +109,17 @@ Ext.define( 'Oghma.Ext.Table',
     @dropper_move?( x, y, e )
     this
 
-  # Apply the dropper.
+  # Mouse up the dropper.
   #
   # @param [numeric] x X stage location.
   # @param [numeric] y Y stage location.
   # @param [Object] e Event
   # @return [Oghma.App] this
-  apply_dropper: ( x, y, e = null ) ->
-    original_dropper_click = @dropper_click
+  up_dropper: ( x, y, e = null ) ->
+    original_dropper_up = @dropper_up
     if ! e? || ! e.altKey
       @unload_dropper()
-    original_dropper_click?( x, y, e )
+    original_dropper_up?( x, y, e )
     this
 
   # Add a binding.
