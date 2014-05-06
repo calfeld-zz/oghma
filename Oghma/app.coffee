@@ -246,6 +246,10 @@ class Oghma.App
           menu: Oghma.Menu.spawn( this )
         },
         {
+          text: 'Shapes'
+          menu: Oghma.Menu.shapes( this )
+        },
+        {
           text: 'Clear'
           menu: Oghma.Menu.clear( this )
         },
