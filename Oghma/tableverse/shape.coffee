@@ -35,8 +35,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         stroke: stroke
         width:  width
         height: height
-        x:      -width / 2
-        y:      -height / 2
+        x:      0
+        y:      0
       )
 
     remove: ( thingy ) ->
@@ -73,4 +73,28 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         attrs
       )
   )
+
+  rect_attrs = ( attrs, A, B ) ->
+    x:      Math.min( A[0], B[0] )
+    y:      Math.min( A[1], B[1] )
+    width:  Math.abs( B[0] - A[0] )
+    height: Math.abs( B[1] - A[1] )
+    fill:   attrs.fill
+    stroke: attrs.stroke
+
+  rect_create = ( name, group, attrs, A, B ) ->
+    rect = new Kinetic.Rect( rect_attrs( attrs, A, B ) )
+    group.add( rect )
+    rect
+
+  rect_resize = ( rect, attrs, A, B ) ->
+    console.debug( 'temp', rect_attrs( attrs, A, B ) )
+    rect.setAttrs( rect_attrs( attrs, A, B ) )
+
+  rect_finish = ( name, attrs, A, B ) ->
+    attrs = rect_attrs( attrs, A, B )
+    attrs.shape = 'rectangle'
+    O.tableverse.create( 'shape', attrs )
+
+  O.twopoint.define( 'rectangle', rect_create, rect_resize, rect_finish )
 )
