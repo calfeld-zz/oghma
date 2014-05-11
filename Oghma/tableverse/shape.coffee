@@ -32,6 +32,14 @@ c_shapes =
       attrs.width  = 2*r
       attrs.height = 2*r
       attrs.r      = r
+  line:
+    create: -> new Kinetic.Line(points: [ 0, 0, 0, 0 ])
+    extra: ( attrs ) ->
+      attrs.points = [ 0, 0, attrs.width, attrs.height ]
+    b_attrs: ( attrs, B ) ->
+      attrs.width  = B[0]
+      attrs.height = B[1]
+      attrs.points = [ 0, 0, B[0], B[1] ]
 
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 

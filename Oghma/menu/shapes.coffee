@@ -54,6 +54,11 @@ Oghma.Menu.shapes = ( O ) ->
         text: 'Circle...'
         handler: ->
           spawn_dialog( 'circle' ).show()
+      },
+      {
+        text: 'Line...'
+        handler: ->
+          spawn_dialog( 'line' ).show()
       }
     ]
   )
