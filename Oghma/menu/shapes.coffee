@@ -27,13 +27,16 @@ Oghma.Menu.shapes = ( O ) ->
   spawn_rect_dialog = ->
     dialog = Ext.create( 'Oghma.Ext.EditObject',
       object:
-        fill:      O.me().gets( 'primary' )
-        stroke:    O.me().gets( 'secondary' )
+        fill:    O.me().gets( 'primary' )
+        stroke:  O.me().gets( 'secondary' )
+        opacity: 1.0
       types:
-        fill:   'color'
-        stroke: 'color'
+        fill:    'color'
+        stroke:  'color'
+        opacity: 'string'
       title: 'Spawn Rectangle'
       onSave: ( attrs ) =>
+        attrs.opacity = parseFloat( attrs.opacity )
         O.twopoint.load( 'rectangle', attrs )
         dialog.close()
       onCancel: ->

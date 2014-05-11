@@ -28,15 +28,16 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         @__k = new Kinetic.Rect()
         @group().add( @__k )
 
-      [ fill, stroke, width, height ] =
-        @thingy().geta( 'fill', 'stroke', 'width', 'height' )
+      [ fill, stroke, width, height, opacity ] =
+        @thingy().geta( 'fill', 'stroke', 'width', 'height', 'opacity' )
       @__k.setAttrs(
-        fill:   fill
-        stroke: stroke
-        width:  width
-        height: height
-        x:      0
-        y:      0
+        fill:    fill
+        stroke:  stroke
+        opacity: opacity
+        width:   width
+        height:  height
+        x:       0
+        y:       0
       )
 
     remove: ( thingy ) ->
@@ -50,18 +51,20 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
     [
       'owner',
       'shape',
-      'fill', 'stroke'
+      'fill', 'stroke', 'opacity'
     ],
     {
       loc:    [ 'x', 'y', 'width', 'height' ]
       status: [ 'locked', 'visible_to', 'zindex' ]
     },
     ( attrs ) ->
-      attrs.shape  ?= 'rectangle'
-      attrs.fill   ?= O.me().gets( 'primary' )
-      attrs.stroke ?= O.me().gets( 'secondary' )
-      attrs.width  ?= 20
-      attrs.height ?= 20
+      console.debug( 'attrs', attrs.opacity )
+      attrs.shape   ?= 'rectangle'
+      attrs.fill    ?= O.me().gets( 'primary' )
+      attrs.stroke  ?= O.me().gets( 'secondary' )
+      attrs.width   ?= 20
+      attrs.height  ?= 20
+      attrs.opacity ?= 1.0
 
       @after_construction( =>
         thingyverse.shapes.add( this )
@@ -75,12 +78,13 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   )
 
   rect_attrs = ( attrs, A, B ) ->
-    x:      Math.min( A[0], B[0] )
-    y:      Math.min( A[1], B[1] )
-    width:  Math.abs( B[0] - A[0] )
-    height: Math.abs( B[1] - A[1] )
-    fill:   attrs.fill
-    stroke: attrs.stroke
+    x:       Math.min( A[0], B[0] )
+    y:       Math.min( A[1], B[1] )
+    width:   Math.abs( B[0] - A[0] )
+    height:  Math.abs( B[1] - A[1] )
+    fill:    attrs.fill
+    stroke:  attrs.stroke
+    opacity: attrs.opacity
 
   rect_create = ( name, group, attrs, A, B ) ->
     rect = new Kinetic.Rect( rect_attrs( attrs, A, B ) )
