@@ -80,6 +80,7 @@ class Oghma.TwoPoint
 
     move = ( x, y, event ) =>
       if group?
+        [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
         if ! event.altKey
           B = [ x, y ]
         else
@@ -93,6 +94,7 @@ class Oghma.TwoPoint
       null
 
     up = ( x, y, event ) =>
+      [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
       B = [ x, y ]
       group?.destroy()
       group = null
@@ -103,6 +105,7 @@ class Oghma.TwoPoint
       null
 
     down = ( x, y ) =>
+      [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
       group = new Kinetic.Group()
       @_.layer.add( group )
       A = [ x, y ]
