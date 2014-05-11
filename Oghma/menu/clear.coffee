@@ -26,7 +26,8 @@ Oghma.Menu.clear = ( O ) ->
   Ext.create( 'Oghma.Ext.Menu',
     listeners:
       beforeshow: ->
-        @child( '#dice' ).setDisabled( O.tableverse.dice.empty() )
+        @child( '#dice'   ).setDisabled( O.tableverse.dice.empty()   )
+        @child( '#shapes' ).setDisabled( O.tableverse.shapes.empty() )
     items: [
       {
         text:    'Dice'
@@ -38,6 +39,16 @@ Oghma.Menu.clear = ( O ) ->
               die.remove()
           )
       },
+      {
+        text: 'Shapes'
+        id:   'shapes'
+        handler: ( item, e ) =>
+          all = e.shiftKey
+          O.tableverse.shapes.each( ( shape ) ->
+            if all || O.i_own( shape )
+              shape.remove()
+          )
+      }
       '-',
       {
         text: "Hold shift for all (vs. mine)."
