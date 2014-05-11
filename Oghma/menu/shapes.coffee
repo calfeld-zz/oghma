@@ -24,7 +24,7 @@ Oghma.Menu ?= {}
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2014 Christopher Alfeld
 Oghma.Menu.shapes = ( O ) ->
-  spawn_rect_dialog = ->
+  spawn_dialog = ( which ) ->
     dialog = Ext.create( 'Oghma.Ext.EditObject',
       object:
         fill:    O.me().gets( 'primary' )
@@ -34,10 +34,10 @@ Oghma.Menu.shapes = ( O ) ->
         fill:    'color'
         stroke:  'color'
         opacity: 'string'
-      title: 'Spawn Rectangle'
+      title: 'Spawn'
       onSave: ( attrs ) =>
         attrs.opacity = parseFloat( attrs.opacity )
-        O.twopoint.load( 'rectangle', attrs )
+        O.twopoint.load( which, attrs )
         dialog.close()
       onCancel: ->
         dialog.close()
@@ -48,7 +48,12 @@ Oghma.Menu.shapes = ( O ) ->
       {
         text: 'Rectangle...'
         handler: ->
-          spawn_rect_dialog().show()
+          spawn_dialog( 'rectangle' ).show()
+      },
+      {
+        text: 'Circle...'
+        handler: ->
+          spawn_dialog( 'circle' ).show()
       }
     ]
   )

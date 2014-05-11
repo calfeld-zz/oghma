@@ -20,7 +20,12 @@ c_shapes =
   rectangle:
     create: -> new Kinetic.Rect()
     extra:  -> { x:0, y:0 }
-  circle:    true
+  circle:
+    create: -> new Kinetic.Circle()
+    extra:  ( thingy ) ->
+      x: 0
+      y: 0
+      r: thingy.gets( 'width' ) / 2
 
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
@@ -98,7 +103,6 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
     rect
 
   rect_resize = ( rect, attrs, A, B ) ->
-    console.debug( 'temp', rect_attrs( attrs, A, B ) )
     rect.setAttrs( rect_attrs( attrs, A, B ) )
 
   rect_finish = ( name, attrs, A, B ) ->
@@ -107,4 +111,33 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
     O.tableverse.create( 'shape', attrs )
 
   O.twopoint.define( 'rectangle', rect_create, rect_resize, rect_finish )
+
+  circle_attrs = ( attrs, A, B ) ->
+    w = Math.abs( B[0] - A[0] )
+    h = Math.abs( B[1] - A[1] )
+    r = Math.max( w, h )
+
+    x:       A[0]
+    y:       A[1]
+    width:   2*r
+    height:  2*r
+    r:       r
+    fill:    attrs.fill
+    stroke:  attrs.stroke
+    opacity: attrs.opacity
+
+  circle_create = ( name, group, attrs, A, B ) ->
+    circle = new Kinetic.Circle( circle_attrs( attrs, A, B ) )
+    group.add( circle )
+    circle
+
+  circle_resize = ( circle, attrs, A, B ) ->
+    circle.setAttrs( circle_attrs( attrs, A, B ) )
+
+  circle_finish = ( name, attrs, A, B ) ->
+    attrs = circle_attrs( attrs, A, B )
+    attrs.shape = 'circle'
+    O.tableverse.create( 'shape', attrs )
+
+  O.twopoint.define( 'circle', circle_create, circle_resize, circle_finish )
 )
