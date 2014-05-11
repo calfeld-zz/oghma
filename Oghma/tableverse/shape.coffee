@@ -19,13 +19,19 @@ c_layer = 'annotations'
 c_shapes =
   rectangle:
     create: -> new Kinetic.Rect()
-    extra:  -> { x:0, y:0 }
+    b_attrs: ( attrs, B ) ->
+      attrs.width  = B[0]
+      attrs.height = B[1]
   circle:
     create: -> new Kinetic.Circle()
-    extra:  ( thingy ) ->
-      x: 0
-      y: 0
-      r: thingy.gets( 'width' ) / 2
+    extra: ( attrs ) ->
+      attrs.r = attrs.width / 2
+    b_attrs: ( attrs, B ) ->
+      r = Math.max( B[0], B[1] )
+
+      attrs.width  = 2*r
+      attrs.height = 2*r
+      attrs.r      = r
 
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
@@ -42,13 +48,14 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       [ fill, stroke, width, height, opacity ] =
         @thingy().geta( 'fill', 'stroke', 'width', 'height', 'opacity' )
       attrs =
+        x:       0
+        y:       0
         fill:    fill
         stroke:  stroke
         opacity: opacity
         width:   width
         height:  height
-      for k, v of c_shapes[shape].extra( @thingy() )
-        attrs[k] = v
+      c_shapes[shape].extra?( attrs )
       @__k.setAttrs( attrs )
 
     remove: ( thingy ) ->
@@ -88,58 +95,33 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       )
   )
 
-  rect_attrs = ( attrs, A, B ) ->
-    x:       0
-    y:       0
-    width:   B[0]
-    height:  B[1]
-    fill:    attrs.fill
-    stroke:  attrs.stroke
-    opacity: attrs.opacity
+  for k, v of c_shapes
+    do ( k, v ) ->
+      calculate_attrs = ( attrs, B ) ->
+        attrs =
+          x:       0
+          y:       0
+          fill:    attrs.fill
+          stroke:  attrs.stroke
+          opacity: attrs.opacity
+        v.b_attrs?( attrs, B )
+        console.debug( attrs.width, attrs.height, B[0], B[1] )
+        attrs
 
-  rect_create = ( name, group, attrs, A, B ) ->
-    rect = new Kinetic.Rect( rect_attrs( attrs, A, B ) )
-    group.add( rect )
-    rect
+      create = ( name, group, attrs, A, B ) ->
+        obj = v.create()
+        group.add( obj )
+        obj
 
-  rect_resize = ( rect, attrs, A, B ) ->
-    rect.setAttrs( rect_attrs( attrs, A, B ) )
+      resize = ( obj, attrs, A, B ) ->
+        obj.setAttrs( calculate_attrs( attrs, B ) )
 
-  rect_finish = ( name, attrs, A, B ) ->
-    attrs = rect_attrs( attrs, A, B )
-    attrs.shape = 'rectangle'
-    attrs.x = A[0]
-    attrs.y = A[1]
-    O.tableverse.create( 'shape', attrs )
+      finish = ( name, attrs, A, B ) ->
+        attrs = calculate_attrs( attrs, B )
+        attrs.shape = k
+        attrs.x = A[0]
+        attrs.y = A[1]
+        O.tableverse.create( 'shape', attrs )
 
-  O.twopoint.define( 'rectangle', rect_create, rect_resize, rect_finish )
-
-  circle_attrs = ( attrs, A, B ) ->
-    r = Math.max( B[0], B[1] )
-
-    x:       0
-    y:       0
-    width:   2*r
-    height:  2*r
-    r:       r
-    fill:    attrs.fill
-    stroke:  attrs.stroke
-    opacity: attrs.opacity
-
-  circle_create = ( name, group, attrs, A, B ) ->
-    circle = new Kinetic.Circle( circle_attrs( attrs, A, B ) )
-    group.add( circle )
-    circle
-
-  circle_resize = ( circle, attrs, A, B ) ->
-    circle.setAttrs( circle_attrs( attrs, A, B ) )
-
-  circle_finish = ( name, attrs, A, B ) ->
-    attrs = circle_attrs( attrs, A, B )
-    attrs.shape = 'circle'
-    attrs.x = A[0]
-    attrs.y = A[1]
-    O.tableverse.create( 'shape', attrs )
-
-  O.twopoint.define( 'circle', circle_create, circle_resize, circle_finish )
+      O.twopoint.define( k, create, resize, finish )
 )
