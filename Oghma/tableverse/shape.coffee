@@ -67,7 +67,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       @__k.setAttrs( attrs )
 
     remove: ( thingy ) ->
-      thingyverse.dice.remove( thingy )
+      thingyverse.shapes.remove( thingy )
       super thingy
 
   thingyverse.shapes = new Heron.Index.MapIndex( 'owner' )
