@@ -16,29 +16,35 @@ Oghma = @Oghma ?= {}
 Oghma.Thingy ?= {}
 
 c_layer = 'annotations'
+c_shapes =
+  rectangle:
+    create: -> new Kinetic.Rect()
+    extra:  -> { x:0, y:0 }
+  circle:    true
 
 Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
 
   class ShapeDelegate extends Oghma.KineticThingyDelegate
     draw: ->
-      if @thingy().gets( 'shape' ) != 'rectangle'
+      shape = @thingy().gets( 'shape' )
+      if ! c_shapes[shape]?
         throw "Unsupported shape: #{shape}"
 
       if ! @__k?
-        @__k = new Kinetic.Rect()
+        @__k = c_shapes[shape].create()
         @group().add( @__k )
 
       [ fill, stroke, width, height, opacity ] =
         @thingy().geta( 'fill', 'stroke', 'width', 'height', 'opacity' )
-      @__k.setAttrs(
+      attrs =
         fill:    fill
         stroke:  stroke
         opacity: opacity
         width:   width
         height:  height
-        x:       0
-        y:       0
-      )
+      for k, v of c_shapes[shape].extra( @thingy() )
+        attrs[k] = v
+      @__k.setAttrs( attrs )
 
     remove: ( thingy ) ->
       thingyverse.dice.remove( thingy )
