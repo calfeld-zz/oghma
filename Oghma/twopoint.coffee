@@ -21,14 +21,17 @@ Oghma = @Oghma ?= {}
 # 1. Load.  The drawing is specified along with initial attributes and loaded
 #    into the dropper.
 # 2. Create.  The create function is called with any attributes provided at
-#    load and with points A and B set to the mouse down location.
+#    load, a group at point A, and the point B set to the (group's) origin.
 # 3. Update.  As the mouse moves, the update function is called with updated
-#    A and B locations.  If alt is not held, B is moved.  If alt is held,
-#    then both are moved.
+#    B location.  If alt is not held, B is moved.  If alt is held,
+#    then the group is moved.
 # 4. Finish.  When mouse up, the kinetic group is destroyed, and the
 #    drawing finish function is called with the final A and B.  It is expected
 #    that the finish function will create a thingy to instantiate a permanent
 #    drawing.
+#
+# It is important to realize that B is in the coordinates of the group.  I.e.,
+# the location on the layer that B refers to is A + B.
 #
 # @author Christopher Alfeld (calfeld@calfeld.net)
 # @copyright 2013 Christopher Alfeld
@@ -82,12 +85,12 @@ class Oghma.TwoPoint
       if group?
         [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
         if ! event.altKey
-          B = [ x, y ]
+          B = [ x - A[0], y - A[1] ]
         else
           dx = x - prev[0]
           dy = y - prev[1]
           A = [ A[0] + dx, A[1] + dy ]
-          B = [ B[0] + dx, B[1] + dy ]
+          group.setPosition( x: A[0], y: A[1] )
         @update( name, data, attrs, A, B )
         @_.layer.draw()
         prev = [ x, y ]
@@ -95,7 +98,7 @@ class Oghma.TwoPoint
 
     up = ( x, y, event ) =>
       [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
-      B = [ x, y ]
+      B = [ x - A[0], y - A[1] ]
       group?.destroy()
       group = null
       @_.layer.draw()
@@ -106,11 +109,11 @@ class Oghma.TwoPoint
 
     down = ( x, y ) =>
       [ x, y ] = @_.O.grid.nearest( [ x, y ], A )
-      group = new Kinetic.Group()
+      group = new Kinetic.Group( x: x, y: y )
       @_.layer.add( group )
       A = [ x, y ]
-      B = A
-      prev = A
+      B = [ 0, 0 ]
+      prev = [ x, y ]
       data = @create( name, group, attrs, A, B )
       group.draw()
 

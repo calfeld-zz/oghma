@@ -89,10 +89,10 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   )
 
   rect_attrs = ( attrs, A, B ) ->
-    x:       Math.min( A[0], B[0] )
-    y:       Math.min( A[1], B[1] )
-    width:   Math.abs( B[0] - A[0] )
-    height:  Math.abs( B[1] - A[1] )
+    x:       0
+    y:       0
+    width:   B[0]
+    height:  B[1]
     fill:    attrs.fill
     stroke:  attrs.stroke
     opacity: attrs.opacity
@@ -108,17 +108,17 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   rect_finish = ( name, attrs, A, B ) ->
     attrs = rect_attrs( attrs, A, B )
     attrs.shape = 'rectangle'
+    attrs.x = A[0]
+    attrs.y = A[1]
     O.tableverse.create( 'shape', attrs )
 
   O.twopoint.define( 'rectangle', rect_create, rect_resize, rect_finish )
 
   circle_attrs = ( attrs, A, B ) ->
-    w = Math.abs( B[0] - A[0] )
-    h = Math.abs( B[1] - A[1] )
-    r = Math.max( w, h )
+    r = Math.max( B[0], B[1] )
 
-    x:       A[0]
-    y:       A[1]
+    x:       0
+    y:       0
     width:   2*r
     height:  2*r
     r:       r
@@ -137,6 +137,8 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
   circle_finish = ( name, attrs, A, B ) ->
     attrs = circle_attrs( attrs, A, B )
     attrs.shape = 'circle'
+    attrs.x = A[0]
+    attrs.y = A[1]
     O.tableverse.create( 'shape', attrs )
 
   O.twopoint.define( 'circle', circle_create, circle_resize, circle_finish )
