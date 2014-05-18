@@ -100,7 +100,7 @@ class Oghma.App
       { name: 'Grid',     mode: 'grid'     },
       { name: 'Antigrid', mode: 'antigrid' }
     ],
-    index: 1
+    index: 2
   )
 
   # Default table.
@@ -244,6 +244,10 @@ class Oghma.App
         {
           text: 'Spawn'
           menu: Oghma.Menu.spawn( this )
+        },
+        {
+          text: 'Tools'
+          menu: Oghma.Menu.tools( this )
         },
         {
           text: 'Shapes'
