@@ -84,7 +84,6 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
       status: [ 'locked', 'visible_to', 'zindex' ]
     },
     ( attrs ) ->
-      console.debug( 'attrs', attrs.opacity )
       attrs.shape   ?= 'rectangle'
       attrs.fill    ?= O.me().gets( 'primary' )
       attrs.stroke  ?= O.me().gets( 'secondary' )
@@ -113,7 +112,6 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
           stroke:  attrs.stroke
           opacity: attrs.opacity
         v.b_attrs?( attrs, B )
-        console.debug( attrs.width, attrs.height, B[0], B[1] )
         attrs
 
       create = ( name, group, attrs, A, B ) ->
