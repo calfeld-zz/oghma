@@ -24,7 +24,7 @@ class Oghma.Grid
   constructor: ( O ) ->
     @_ =
       O: O
-      mode: 'auto'
+      mode: 'both'
 
   # Convert table coordinates to grid coordinates.
   to_grid: ( pt ) ->
