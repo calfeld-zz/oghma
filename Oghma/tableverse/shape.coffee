@@ -25,13 +25,13 @@ c_shapes =
   circle:
     create: -> new Kinetic.Circle()
     extra: ( attrs ) ->
-      attrs.r = attrs.width / 2
+      attrs.radius = attrs.width / 2
     b_attrs: ( attrs, B ) ->
       r = Math.max( B[0], B[1] )
 
       attrs.width  = 2*r
       attrs.height = 2*r
-      attrs.r      = r
+      attrs.radius = r
   line:
     create: -> new Kinetic.Line(points: [ 0, 0, 0, 0 ])
     extra: ( attrs ) ->
