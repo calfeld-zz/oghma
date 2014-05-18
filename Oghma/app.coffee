@@ -358,6 +358,9 @@ class Oghma.App
       @ui_colors.on_set( ( v ) => @me().set( ui_colors: v.name ) )
     )
 
+    # Go to center on join table.
+    @on( 'join_table', => @action.return_to_origin() )
+
     @verbose( 'Oghma is connecting...' )
 
     # Connect
