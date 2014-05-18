@@ -28,6 +28,7 @@ Oghma.Menu.clear = ( O ) ->
       beforeshow: ->
         @child( '#dice'   ).setDisabled( O.tableverse.dice.empty()   )
         @child( '#shapes' ).setDisabled( O.tableverse.shapes.empty() )
+        @child( '#rulers' ).setDisabled( O.tableverse.rulers.empty() )
     items: [
       {
         text:    'Dice'
@@ -37,6 +38,16 @@ Oghma.Menu.clear = ( O ) ->
           O.tableverse.dice.each( ( die ) ->
             if all || O.i_own( die )
               die.remove()
+          )
+      },
+      {
+        text: 'Rulers'
+        id:   'rulers'
+        handler: ( item, e ) =>
+          all = e.shiftKey
+          O.tableverse.rulers.each( ( ruler ) ->
+            if all || O.i_own( ruler )
+              ruler.remove()
           )
       },
       {
