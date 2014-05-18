@@ -45,8 +45,8 @@ Ext.define( 'Oghma.Ext.Table',
         null
       )
       @getEl().on( 'mouseup', ( e ) =>
-        O.reset_focus()
         @up_dropper( @t( [ e.getX(), e.getY() ] )..., e )
+        O.reset_focus()
         null
       )
       @getEl().on( 'mousemove', ( e ) =>
