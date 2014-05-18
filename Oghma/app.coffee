@@ -211,9 +211,9 @@ class Oghma.App
 
     # Allow right clicks to hit nodes.
     window.oncontextmenu = ( event ) ->
-        event.preventDefault()
-        event.stopPropagation()
-        false
+      event.preventDefault()
+      event.stopPropagation()
+      false
 
     # Console
     @console = Ext.create( 'Oghma.Ext.Console',
