@@ -30,6 +30,13 @@ Oghma.Menu.tools = ( O ) ->
         text: 'Ruler'
         handler: ->
           O.twopoint.load( 'ruler', {} )
+      },
+      {
+        text: 'Ping'
+        handler: ->
+          O.table.load_dropper( ( x, y, e ) ->
+            O.action.ping( x, y, O )
+          )
       }
     ]
   )
