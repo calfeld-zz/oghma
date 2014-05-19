@@ -63,7 +63,7 @@ class Oghma.App
   keymap: null
 
   # Order of layers
-  layer_order: [ 'annotations', 'avatars', 'dice', 'controls' ]
+  layer_order: [ 'avatars', 'dice', 'annotations', 'pings', 'controls' ]
 
   # Layers
   layer: {}
@@ -391,6 +391,11 @@ class Oghma.App
     # Watch for table pull events.
     @event.on( 'table.pull', ( which, table, local ) =>
       @join_table( table )
+    )
+
+    # Watch for ping events.
+    @event.on( 'ping', ( which, location ) =>
+      Oghma.ping( O.layer.pings, O.me().gets( 'primary' ), location.x, location.y )
     )
 
     @allverse.connect( @dictionary, 'oghma.thingy.all', =>
