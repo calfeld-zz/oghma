@@ -30,7 +30,6 @@ Oghma.Menu.tools = ( O ) ->
         text: 'Ruler'
         handler: ->
           O.twopoint.load( 'ruler', {}, ( attrs ) ->
-            console.debug( 'attrs = ', attrs )
             O.tableverse.create( 'ruler', attrs )
           )
       },
