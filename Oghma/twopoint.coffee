@@ -26,8 +26,9 @@ Oghma = @Oghma ?= {}
 #    B location.  If alt is not held, B is moved.  If alt is held,
 #    then the group is moved.
 # 4. Finish.  When mouse up, the kinetic group is destroyed, and the
-#    drawing finish function is called with the final A and B.  It is expected
-#    that the finish function will create a thingy to instantiate a permanent
+#    drawing finish function is called with the final A and B.  The finish
+#    function should return the final attributes.  It is expected that these
+#    attributes will be used to create a thingy to instantiate a permanent
 #    drawing.
 #
 # It is important to realize that B is in the coordinates of the group.  I.e.,
@@ -67,8 +68,9 @@ class Oghma.TwoPoint
   #
   # @param [string] name Name of drawing to load.
   # @param [object] attrs Initial attributes.
+  # @param [function] after Function to call with final attributes.
   # @return [Oghma.TwoPoint] this
-  load: ( name, attrs ) ->
+  load: ( name, attrs, after = -> ) ->
     group = null
     data = null
     A = null
@@ -102,7 +104,7 @@ class Oghma.TwoPoint
       group?.destroy()
       group = null
       @_.layer.draw()
-      @finish( name, attrs, A, B )
+      after( @finish( name, attrs, A, B ) )
       if event.altKey
         @load( name, attrs )
       null
@@ -151,7 +153,6 @@ class Oghma.TwoPoint
   # @param [object] attrs Initial attributes.
   # @param [array<float, float>] A Final value of A point.
   # @param [array<float, float>] B Final value of B point.
-  # @return [Oghma.TwoPoint] this
+  # @return [object] Final attributes.
   finish: ( name, attrs, A, B ) ->
     @_.shapes[name].finish( name, attrs, A, B )
-    this

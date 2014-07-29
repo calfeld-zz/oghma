@@ -37,7 +37,9 @@ Oghma.Menu.shapes = ( O ) ->
       title: 'Spawn'
       onSave: ( attrs ) =>
         attrs.opacity = parseFloat( attrs.opacity )
-        O.twopoint.load( which, attrs )
+        O.twopoint.load( which, attrs, ( attrs ) ->
+          O.tableverse.create( 'shape', attrs )
+        )
         dialog.close()
       onCancel: ->
         dialog.close()

@@ -131,15 +131,15 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
     objs.label.setAttrs( calculate_label_attrs( attrs, B ) )
 
   finish = ( name, attrs, A, B ) ->
-    attrs =
+    attrs = 
       x:       A[0]
       y:       A[1]
       width:   B[0]
       height:  B[1]
       stroke:  attrs.stroke
       opacity: attrs.opacity
-    O.tableverse.create( 'ruler', attrs )
-
+    attrs
+    
   O.twopoint.define( 'ruler', create, update, finish )
 
   O.ui_colors.on_set( ->

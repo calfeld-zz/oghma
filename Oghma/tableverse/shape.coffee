@@ -127,7 +127,7 @@ Oghma.Thingy.Tableverse.register( ( thingyverse, O ) ->
         attrs.shape = k
         attrs.x = A[0]
         attrs.y = A[1]
-        O.tableverse.create( 'shape', attrs )
-
+        attrs
+        
       O.twopoint.define( k, create, resize, finish )
 )
