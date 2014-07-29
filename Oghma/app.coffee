@@ -63,7 +63,14 @@ class Oghma.App
   keymap: null
 
   # Order of layers
-  layer_order: [ 'avatars', 'dice', 'annotations', 'pings', 'controls' ]
+  layer_order: [ 
+    'maps',
+    'avatars',
+    'dice',
+    'annotations',
+    'pings',
+    'controls'
+  ]
 
   # Layers
   layer: {}
@@ -266,6 +273,13 @@ class Oghma.App
           menu: Oghma.Menu.debug( this )
         }
       ]
+    )
+    @on( 'post_login', ( me ) =>
+      if @isGM()
+        @toolbar_main.add(
+          text: 'Maps'
+          menu: Oghma.Menu.maps( this ) 
+        )
     )
     @viewport.add( @toolbar_main )
 
