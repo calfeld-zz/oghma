@@ -68,18 +68,19 @@ Ext.define( 'Oghma.Ext.Table',
   # @param [function(x, y, event)] down Function to load for mouse down.
   # @param [function(x, y, event)] move  Function to load for mouse move.
   # @param [function()] unload Function to load for unload.
-  # @return [Oghma.App] this
+  # @return [Oghma.Table] this
   load_dropper: ( up, down = null, move = null, unload = null ) ->
     @dropper_up     = up
     @dropper_down   = down
     @dropper_move   = move
     @dropper_unload = unload
     document.body.style.cursor = 'crosshair'
+    @stopListening()
     this
 
   # Unload the dropper.
   #
-  # @return [Oghma.App] this
+  # @return [Oghma.Table] this
   unload_dropper: ->
     @dropper_unload?()
     @dropper_up     = null
@@ -87,14 +88,32 @@ Ext.define( 'Oghma.Ext.Table',
     @dropper_move   = null
     @dropper_unload = null
     document.body.style.cursor = 'default'
+    @startListening()
     this
+
+  # Prevent object bindings.
+  #
+  # @return [Oghma.Table] this]
+  stopListening: ->
+    for child in @stage.children
+      child.listening(false)
+    null
+
+  # Allow object bindings.
+  #
+  # @return [Oghma.Table] this]
+  startListening: ->
+    for child in @stage.children
+      child.listening(true)
+    null
+
 
   # Mouse down the dropper.
   #
   # @param [numeric] x X stage location.
   # @param [numeric] y Y stage location.
   # @param [Object] e Event
-  # @return [Oghma.App] this
+  # @return [Oghma.Table] this
   down_dropper: ( x, y, e = null ) ->
     @dropper_down?( x, y, e )
     this
@@ -104,7 +123,7 @@ Ext.define( 'Oghma.Ext.Table',
   # @param [numeric] x X stage location.
   # @param [numeric] y Y stage location.
   # @param [Object] e Event
-  # @return [Oghma.App] this
+  # @return [Oghma.Table] this
   move_dropper: ( x, y, e = null ) ->
     @dropper_move?( x, y, e )
     this
@@ -114,7 +133,7 @@ Ext.define( 'Oghma.Ext.Table',
   # @param [numeric] x X stage location.
   # @param [numeric] y Y stage location.
   # @param [Object] e Event
-  # @return [Oghma.App] this
+  # @return [Oghma.Table] this
   up_dropper: ( x, y, e = null ) ->
     original_dropper_up = @dropper_up
     if ! e? || ! e.altKey
