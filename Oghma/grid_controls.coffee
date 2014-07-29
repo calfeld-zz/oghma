@@ -33,7 +33,6 @@ class Oghma.GridControls
   # @option config [String] color Color of controls.
   # @option config [String] origin_color Color of origin control.
   constructor: ( config = {} ) ->
-    console.debug(config)
     @_ =
       layer:        config.layer        ? throw 'Missing layer.'
       grid:         config.grid         ? throw 'Missing grid.'
