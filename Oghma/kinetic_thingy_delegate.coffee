@@ -508,7 +508,7 @@ class Oghma.KineticThingyDelegate
   # Is thingy context menuable?
   # @return [bool] Is thingy context menuable?
   is_context_menuable: ( event ) ->
-    event.evt.which == 3 && @is_drawn() && ( @is_owned() || event.evt.shiftKey )
+    event.evt.which == 3 && @is_drawn() && ( ( ! @is_locked() && @is_owned() ) || event.evt.shiftKey )
 
   # Is thingy controlled by grid mode.
   # @return [bool] Is thingy controlled by grid mode.
